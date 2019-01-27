@@ -1,26 +1,25 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+const EstablishmentSelector = () => {
+  return (
+    <>
+      <Link to="/12345">Hanny Cafe</Link>
+    </>
+  );
+};
+const EstablishmentDetail = ({ match }) => <h2>CAMID: {match.params.camid}</h2>;
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <div className="App">
+          <Route path="/" exact component={EstablishmentSelector} />
+          <Route path="/:camid" component={EstablishmentDetail} />
+        </div>
+      </Router>
     );
   }
 }
