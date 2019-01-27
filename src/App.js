@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import EstablishmentDetail from './components/EstablishmentDetail'
 import EstablishmentSelector from './components/EstablishmentSelector'
+
 class App extends Component {
   render() {
     return (

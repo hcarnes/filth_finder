@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Establishment from '../models/Establishment'
+import EstablishmentList from "./EstablishmentList";
 
 const EstablishmentSelector = () => {
   return (
     <>
-      <Link to="/12345">Hanny Cafe</Link>
+      <h1>Establishments near you:</h1>
+      <EstablishmentList establishments={Establishment.near(1,1)}/>
     </>
   );
 };
