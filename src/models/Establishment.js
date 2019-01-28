@@ -8,14 +8,12 @@ const fetchDetails = async camis => {
   return response.data;
 };
 class Establishment {
-  static near(lat, lng) {
-    return [
-      { camis: "40363098", dba: "Dunkin Donuts", grade: "A" },
-      { camis: "40369608", dba: "River Cafe", grade: "B" },
-      { camis: "40373272", dba: "Henry's End", grade: "A" },
-      { camis: "40376635", dba: "Tripoli Restaurant", grade: "A" },
-      { camis: "40376635", dba: "Clark's Restaurant", grade: "C" }
-    ];
+  static async near(lat, lng) {
+    const establishments = await axios.get("http://localhost:3001/near_me", {
+      params: { lat, lng }
+    });
+
+    return establishments.data;
   }
 
   static async detail(camis) {
@@ -47,7 +45,9 @@ class Establishment {
 
     const establishmentDetail = {
       dba: detailsData[0].dba,
-      inspections: aggInspections(detailsData).sort((a, b) => Date.parse(b.date) - Date.parse(a.date) )
+      inspections: aggInspections(detailsData).sort(
+        (a, b) => Date.parse(b.date) - Date.parse(a.date)
+      )
     };
 
     if (establishmentDetail) {
