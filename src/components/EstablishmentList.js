@@ -8,7 +8,7 @@ const EstablishmentList = ({ establishments }) => {
         {establishments.map(establishment => {
           return (
             <li>
-              <Link to={`/${establishment.camis}`}>{establishment.dba} - {establishment.grade}</Link>
+              <Link to={`/${establishment.camis}`}>{establishment.dba}</Link>
             </li>
           );
         })}
