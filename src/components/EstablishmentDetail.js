@@ -9,7 +9,6 @@ class EstablishmentDetail extends React.Component {
   componentDidMount = async () => {
     const establishment = await Establishment.detail(this.state.camis);
     this.setState({establishment})
-    console.log(establishment)
   };
 
   render = () => {
@@ -40,7 +39,6 @@ class EstablishmentDetail extends React.Component {
               );
             })}
           </ul>
-          )
         </>
       );
     } else {

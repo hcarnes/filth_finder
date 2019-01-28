@@ -7692,7 +7692,7 @@ prompts@^0.1.9:
     kleur "^2.0.1"
     sisteransi "^0.1.1"
 
-prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
@@ -7911,6 +7911,13 @@ react-error-overlay@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.2.tgz#888957b884d4b25b083a82ad550f7aad96585394"
   integrity sha512-7kEBKwU9R8fKnZJBRa5RSIfay4KJwnYvKB6gODGicUmDSAhQJ7Tdnll5S0RLtYrzRfMVXlqYw61rzrSpP4ThLQ==
+
+react-geolocated@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-geolocated/-/react-geolocated-2.4.0.tgz#36287997574a12bdccc01381abfe6c4d191b0ecf"
+  integrity sha512-0gHl4cxRWzTF3Wf8RB3WTWoAOwFeSs+GYpF+0oj0gYKZ1WkocIVTSXbHm3aD9iFl6O3BwisJd9n6C+3FaPQ8/A==
+  dependencies:
+    prop-types "^15.5.8"
 
 react-router-dom@^4.3.1:
   version "4.3.1"

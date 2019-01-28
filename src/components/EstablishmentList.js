@@ -7,7 +7,7 @@ const EstablishmentList = ({ establishments }) => {
       <ul>
         {establishments.map(establishment => {
           return (
-            <li>
+            <li key={establishment.camis}>
               <Link to={`/${establishment.camis}`}>{establishment.dba}</Link>
             </li>
           );
