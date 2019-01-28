@@ -1,56 +1,60 @@
+import axios from "axios";
+
+const fetchDetails = async camis => {
+  const response = await axios.get(
+    "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
+    { params: { camis } }
+  );
+  return response.data;
+};
 class Establishment {
   static near(lat, lng) {
     return [
-      { camid: "234532", dba: "Burger King", grade: "A" },
-      { camid: "255543", dba: "Poke Bowl", grade: "B" },
-      { camid: "444543", dba: "Boutros", grade: "A" },
-      { camid: "664563", dba: "River Deli", grade: "A" },
-      { camid: "754322", dba: "Hanny Cafe", grade: "C" }
+      { camis: "40363098", dba: "Dunkin Donuts", grade: "A" },
+      { camis: "40369608", dba: "River Cafe", grade: "B" },
+      { camis: "40373272", dba: "Henry's End", grade: "A" },
+      { camis: "40376635", dba: "Tripoli Restaurant", grade: "A" },
+      { camis: "40376635", dba: "Clark's Restaurant", grade: "C" }
     ];
   }
 
-  static detail(camid) {
-    return {
-      dba: "example",
-      inspections: [
-        {
-          grade: "A",
-          date: "1/23/2017",
-          violations: [
-            {
-              violationCode: "10F",
-              violationDescription: `Non-food contact surface improperly constructed.
-        Unacceptable material used. Non-food contact surface or equipment 
-        improperly maintained and/or not properly sealed, raised, spaced or 
-        movable to allow accessibility for cleaning on all sides, above and 
-        underneath the unit`
-            },
-            {
-              violationCode: "08C",
-              violationDescription: `Pesticide use not in accordance with label or applicable laws. 
-              Prohibited chemical used/stored. Open bait station used.`
-            }
-          ]
-        },
-        {
-          grade: "B",
-          date: "2/24/2016",
-          violations: [
-            {
-              violationCode: "04L",
-              violationDescription: `Evidence of mice or live mice present in facility's food and
-              /or non-food areas.`
-            },
-            {
-              violationCode: "10B",
-              violationDescription: `Plumbing not properly installed or maintained; anti-siphonage or 
-              backflow prevention device not provided where required; equipment or floor not properly 
-              drained; sewage disposal system in disrepair or not functioning properly.`
-            }
-          ]
-        }
-      ]
+  static async detail(camis) {
+    const detailsData = await fetchDetails(camis);
+    const aggViolations = violations => {
+      return violations.map(violation => {
+        return {
+          code: violation.violation_code,
+          description: violation.violation_description
+        };
+      });
     };
+    const aggInspections = details => {
+      const violationDateBuckets = details.reduce((objectsByKeyValue, obj) => {
+        const value = obj["inspection_date"];
+        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        return objectsByKeyValue;
+      }, {});
+      return Object.values(violationDateBuckets).map(
+        violationsByInspectionDate => {
+          return {
+            grade: violationsByInspectionDate[0].grade,
+            date: violationsByInspectionDate[0].inspection_date,
+            violations: aggViolations(violationsByInspectionDate)
+          };
+        }
+      );
+    };
+
+    const establishmentDetail = {
+      dba: detailsData[0].dba,
+      inspections: aggInspections(detailsData).sort((a, b) => Date.parse(b.date) - Date.parse(a.date) )
+    };
+
+    if (establishmentDetail) {
+      return establishmentDetail;
+    } else {
+      return null;
+    }
   }
 }
 
