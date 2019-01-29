@@ -1,5 +1,7 @@
 import React from "react";
 import Establishment from "../models/Establishment";
+import styles from "./EstablishmentDetail.module.css"
+import {Box} from 'grommet';
 class EstablishmentDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -17,16 +19,17 @@ class EstablishmentDetail extends React.Component {
     if (establishment) {
       return (
         <>
+          <Box alignment="start">
           <h1>Violations at {establishment.dba} </h1>
           <p>CAMIS: {this.state.camis}</p>
-          <ul>
+          <ul className={styles.EstablishmentDetail}>
             {establishment.inspections.map(inspection => {
               return (
                 <li key={inspection.date}>
                   Grade: {inspection.grade} - Date: {inspection.date}
                   <br />
                   Violations:
-                  <ul>
+                  <ul className={styles.EstablishmentDetail}>
                     {inspection.violations.map(v => {
                       return (
                         <li key={inspection.date + v.code}>
@@ -41,6 +44,7 @@ class EstablishmentDetail extends React.Component {
             })}
           </ul>
           )
+          </Box>
         </>
       );
     } else {
