@@ -31,9 +31,9 @@ class EstablishmentDetail extends React.Component {
 
           <Text>CAMIS: {this.state.camis}</Text>
           <ul className={styles.EstablishmentDetail}>
-            {establishment.inspections.map(inspection => {
-              return (
-                <Accordion>
+            <Accordion>
+              {establishment.inspections.map(inspection => {
+                return (
                   <AccordionPanel header={renderPanelHeader(inspection.date)}>
                     <li key={inspection.date}>
                       <Box
@@ -58,9 +58,9 @@ class EstablishmentDetail extends React.Component {
                       </Box>
                     </li>
                   </AccordionPanel>
-                </Accordion>
-              );
-            })}
+                );
+              })}
+            </Accordion>
           </ul>
         </>
       );
