@@ -27,41 +27,43 @@ class EstablishmentDetail extends React.Component {
     if (establishment) {
       return (
         <>
-          <Heading>Violations at {establishment.dba}</Heading>
-
-          <Text>CAMIS: {this.state.camis}</Text>
-          <ul className={styles.EstablishmentDetail}>
-            <Accordion>
-              {establishment.inspections.map(inspection => {
-                return (
-                  <AccordionPanel header={renderPanelHeader(inspection.date)}>
-                    <li key={inspection.date}>
-                      <Box
-                        pad="medium"
-                        background="light-2"
-                        style={{ textAlign: "left" }}
-                      >
-                        <Text>Grade: {inspection.grade}</Text>
-                        <br />
-                        <Text>Violations:</Text>
-                        <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.map(v => {
-                            return (
-                              <li key={inspection.date + v.code}>
-                                <p>
-                                  {v.code} - {v.description}
-                                </p>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </Box>
-                    </li>
-                  </AccordionPanel>
-                );
-              })}
-            </Accordion>
-          </ul>
+          
+            <Heading>Violations at {establishment.dba}</Heading>
+            
+            <Text>CAMIS: {this.state.camis}</Text>
+            <ul className={styles.EstablishmentDetail}>
+              <Accordion>
+                {establishment.inspections.map(inspection => {
+                  return (
+                    <AccordionPanel header={renderPanelHeader(`${inspection.date} - ${inspection.grade}`)}>
+                      <li key={inspection.date}>
+                        <Box
+                          pad="medium"
+                          background="light-2"
+                          style={{ textAlign: "left" }}
+                        >
+                          <Text>Grade: {inspection.grade}</Text>
+                          <br />
+                          <Text>Violations:</Text>
+                          <ul className={styles.EstablishmentDetail}>
+                            {inspection.violations.map(v => {
+                              return (
+                                <li key={inspection.date + v.code}>
+                                  <p>
+                                    {v.code} - {v.description}
+                                  </p>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </Box>
+                      </li>
+                    </AccordionPanel>
+                  );
+                })}
+              </Accordion>
+            </ul>
+          
         </>
       );
     } else {
