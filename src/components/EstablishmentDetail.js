@@ -29,7 +29,7 @@ class EstablishmentDetail extends React.Component {
       return (
         <>
           <Box align="center">
-            <Heading>Violations at {establishment.dba}</Heading>
+            <Heading color="brand">Violations at {establishment.dba}</Heading>
 
             <Text>CAMIS: {this.state.camis}</Text>
           </Box>
