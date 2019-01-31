@@ -7,7 +7,7 @@ const EstablishmentSelector = () => {
   return (
     <>
     <Box align="center">
-      <Heading>Establishments near you:</Heading>
+      <Heading color="brand">Establishments near you:</Heading>
       <EstablishmentList establishments={Establishment.near(1,1)}/>
      </Box>
     </>
