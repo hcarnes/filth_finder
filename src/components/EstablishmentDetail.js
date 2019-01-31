@@ -39,7 +39,6 @@ class EstablishmentDetail extends React.Component {
                 return (
                   <AccordionPanel
                     label={`${inspection.date} - ${inspection.grade}`}>
-                    <Box background="light-2" style={{height: "50px"}}></Box>
                     <li key={inspection.date}>
                       <Box
                         pad="medium"
