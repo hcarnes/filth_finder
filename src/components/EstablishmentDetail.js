@@ -26,7 +26,7 @@ class EstablishmentDetail extends React.Component {
             <Heading color="brand">Violations at {establishment.dba}</Heading>
             <Text>CAMIS: {this.state.camis}</Text>
             <ul className={styles.EstablishmentDetail}>
-              <Accordion animate="animate" multipe="multiple">
+              <Accordion>
                 {establishment.inspections.map(inspection => {
                   return (
                     <AccordionPanel
