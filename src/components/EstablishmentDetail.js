@@ -30,7 +30,7 @@ class EstablishmentDetail extends React.Component {
                 {establishment.inspections.map(inspection => {
                   return (
                     <AccordionPanel
-                      label={`${inspection.date} - ${inspection.grade}`}
+                      label={`${new Date(inspection.date).toLocaleDateString()} - ${inspection.grade}`}
                     >
                       <li key={inspection.date}>
                         <Box
