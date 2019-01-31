@@ -1,13 +1,7 @@
 import React from "react";
 import Establishment from "../models/Establishment";
 import styles from "./EstablishmentDetail.module.css";
-import {
-  Heading,
-  Text,
-  Accordion,
-  AccordionPanel,
-  Box,
-} from "grommet";
+import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 class EstablishmentDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -30,42 +24,42 @@ class EstablishmentDetail extends React.Component {
         <>
           <Box align="center">
             <Heading color="brand">Violations at {establishment.dba}</Heading>
-
             <Text>CAMIS: {this.state.camis}</Text>
+            <ul className={styles.EstablishmentDetail}>
+              <Accordion animate="animate" multipe="multiple">
+                {establishment.inspections.map(inspection => {
+                  return (
+                    <AccordionPanel
+                      label={`${inspection.date} - ${inspection.grade}`}
+                    >
+                      <li key={inspection.date}>
+                        <Box
+                          pad="medium"
+                          background="light-2"
+                          style={{ textAlign: "left" }}
+                        >
+                          <Text>Grade: {inspection.grade}</Text>
+                          <br />
+                          <Text>Violations:</Text>
+                          <ul className={styles.EstablishmentDetail}>
+                            {inspection.violations.map(v => {
+                              return (
+                                <li key={inspection.date + v.code}>
+                                  <p>
+                                    {v.code} - {v.description}
+                                  </p>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </Box>
+                      </li>
+                    </AccordionPanel>
+                  );
+                })}
+              </Accordion>
+            </ul>
           </Box>
-          <ul className={styles.EstablishmentDetail}>
-            <Accordion animate="animate" multipe="multiple">
-              {establishment.inspections.map((inspection) => {
-                return (
-                  <AccordionPanel
-                    label={`${inspection.date} - ${inspection.grade}`}>
-                    <li key={inspection.date}>
-                      <Box
-                        pad="medium"
-                        background="light-2"
-                        style={{ textAlign: "left" }}
-                      >
-                        <Text>Grade: {inspection.grade}</Text>
-                        <br />
-                        <Text>Violations:</Text>
-                        <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.map(v => {
-                            return (
-                              <li key={inspection.date + v.code}>
-                                <p>
-                                  {v.code} - {v.description}
-                                </p>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </Box>
-                    </li>
-                  </AccordionPanel>
-                );
-              })}
-            </Accordion>
-          </ul>
         </>
       );
     } else {
