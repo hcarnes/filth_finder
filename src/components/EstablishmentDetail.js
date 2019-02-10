@@ -69,12 +69,9 @@ class EstablishmentDetail extends React.Component {
                           background="light-2"
                           style={{ textAlign: "left" }}
                         >
-<<<<<<< HEAD
-=======
                           <Text>Grade: {inspection.grade}</Text>
                           <br />
                           <Text>Violations:</Text>
->>>>>>> dccbd3fc287f2f673715d4515bb8aeed0239f2be
                           <ul className={styles.EstablishmentDetail}>
                             {inspection.violations.map(v => {
                               return (
