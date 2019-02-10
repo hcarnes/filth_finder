@@ -16,8 +16,39 @@ class EstablishmentDetail extends React.Component {
     this.setState({ establishment });
   };
 
+
   render = () => {
     const establishment = this.state.establishment;
+    
+    const gradeColor = (grade) => {
+      if (grade === "A") {
+        return "mediumseagreen"
+      } else if (grade === "B") {
+        return "goldenrod"
+      } else if (grade === "C") {
+        return "crimson"
+      } else
+        return "black"
+    }
+
+    const handleMissingGrade = (grade) => {
+      if (grade) {
+        return grade
+      } else {
+        return "No grade assigned."
+      }
+    }
+
+    const AccordionLabel = ({date, grade}) => {
+      return (
+        <Box pad={{ horizontal: 'xsmall' }}>
+          <Heading level={4}>
+            <span>{`${new Date(date).toLocaleDateString()}`}</span> -
+            <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade)}</span>
+          </Heading>
+        </Box>
+      )
+    }
 
     if (establishment) {
       return (
@@ -30,7 +61,7 @@ class EstablishmentDetail extends React.Component {
                 {establishment.inspections.map(inspection => {
                   return (
                     <AccordionPanel
-                      label={`${new Date(inspection.date).toLocaleDateString()} - ${inspection.grade}`}
+                      label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
                     >
                       <li key={inspection.date}>
                         <Box
