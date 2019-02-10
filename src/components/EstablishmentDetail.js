@@ -1,46 +1,96 @@
 import React from "react";
 import Establishment from "../models/Establishment";
+import styles from "./EstablishmentDetail.module.css";
+import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 class EstablishmentDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { camis: props.match.params.camis, establishment: null };
+    this.state = {
+      camis: props.match.params.camis,
+      establishment: null
+    };
   }
 
   componentDidMount = async () => {
     const establishment = await Establishment.detail(this.state.camis);
-    this.setState({establishment})
-    console.log(establishment)
+    this.setState({ establishment });
   };
+
 
   render = () => {
     const establishment = this.state.establishment;
+    
+    const gradeColor = (grade) => {
+      if (grade === "A") {
+        return "mediumseagreen"
+      } else if (grade === "B") {
+        return "goldenrod"
+      } else if (grade === "C") {
+        return "crimson"
+      } else
+        return "black"
+    }
+
+    const handleMissingGrade = (grade) => {
+      if (grade) {
+        return grade
+      } else {
+        return "No grade assigned."
+      }
+    }
+
+    const AccordionLabel = ({date, grade}) => {
+      return (
+        <Box pad={{ horizontal: 'xsmall' }}>
+          <Heading level={4}>
+            <span>{`${new Date(date).toLocaleDateString()}`}</span> -
+            <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade)}</span>
+          </Heading>
+        </Box>
+      )
+    }
+
     if (establishment) {
       return (
         <>
-          <h1>Violations at {establishment.dba} </h1>
-          <p>CAMIS: {this.state.camis}</p>
-          <ul>
-            {establishment.inspections.map(inspection => {
-              return (
-                <li key={inspection.date}>
-                  Grade: {inspection.grade} - Date: {inspection.date}
-                  <br />
-                  Violations:
-                  <ul>
-                    {inspection.violations.map(v => {
-                      return (
-                        <li key={inspection.date + v.code}>
-                          <p>Code: {v.code}</p>
-                          <p>Description: {v.description}</p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
-          )
+          <Box align="center">
+            <Heading color="brand">Violations at {establishment.dba}</Heading>
+            <Text>CAMIS: {this.state.camis}</Text>
+            <ul className={styles.EstablishmentDetail}>
+              <Accordion>
+                {establishment.inspections.map(inspection => {
+                  return (
+                    <AccordionPanel
+                      label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
+                    >
+                      <li key={inspection.date}>
+                        <Box
+                          pad="medium"
+                          background="light-2"
+                          style={{ textAlign: "left" }}
+                        >
+                          <Text>Grade: {inspection.grade}</Text>
+                          <br />
+                          <Text>Violations:</Text>
+                          <ul className={styles.EstablishmentDetail}>
+                            {inspection.violations.map(v => {
+                              return (
+                                <li key={inspection.date + v.code}>
+                                  <p>
+                                    {v.code} - {v.description}
+                                  </p>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </Box>
+                      </li>
+                    </AccordionPanel>
+                  );
+                })}
+              </Accordion>
+            </ul>
+          </Box>
         </>
       );
     } else {
