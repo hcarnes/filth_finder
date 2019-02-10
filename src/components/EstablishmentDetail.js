@@ -17,30 +17,41 @@ class EstablishmentDetail extends React.Component {
     if (establishment) {
       return (
         <>
-          <h1>Violations at {establishment.dba} </h1>
-          <p>CAMIS: {this.state.camis}</p>
-          <ul>
-            {establishment.inspections.map(inspection => {
-              return (
-                <li key={inspection.date}>
-                  Grade: {inspection.grade} - Date: {inspection.date}
-                  <br />
-                  Violations:
-                  <ul>
-                    {inspection.violations.map(v => {
-                      return (
-                        <li key={inspection.date + v.code}>
-                          <p>Code: {v.code}</p>
-                          <p>Description: {v.description}</p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
-          )
+          <Box align="center">
+            <Heading color="brand">Violations at {establishment.dba}</Heading>
+            <Text>CAMIS: {this.state.camis}</Text>
+            <ul className={styles.EstablishmentDetail}>
+              <Accordion>
+                {establishment.inspections.map(inspection => {
+                  return (
+                    <AccordionPanel
+                      label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
+                    >
+                      <li key={inspection.date}>
+                        <Box
+                          pad="medium"
+                          background="light-2"
+                          style={{ textAlign: "left" }}
+                        >
+                          <ul className={styles.EstablishmentDetail}>
+                            {inspection.violations.map(v => {
+                              return (
+                                <li key={inspection.date + v.code}>
+                                  <p>
+                                    {v.code} - {v.description}
+                                  </p>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </Box>
+                      </li>
+                    </AccordionPanel>
+                  );
+                })}
+              </Accordion>
+            </ul>
+          </Box>
         </>
       );
     } else {
