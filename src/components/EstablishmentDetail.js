@@ -46,6 +46,17 @@ const EstablishmentDetail = (props) => {
     )
   }
 
+  
+  const cleanDescription = (description) => {
+    const regex = /Â/gi;
+
+    if (description) {
+      return description.replace(regex, '');
+    } else {
+      return "";
+    }
+  }
+
   if (establishment) {
     return (
       <>
@@ -70,7 +81,7 @@ const EstablishmentDetail = (props) => {
                             return (
                               <li key={inspection.date + v.code}>
                                 <p>
-                                  {v.code} - {v.description}
+                                  {v.code} - {cleanDescription(v.description)}
                                 </p>
                               </li>
                             );
