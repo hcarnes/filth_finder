@@ -9,7 +9,7 @@ const fetchDetails = async camis => {
 };
 class Establishment {
   static async near(lng, lat) {
-    const establishments = await axios.get("http://localhost:3001/near_me", {
+    const establishments = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/near_me`, {
       params: { lat, lng }
     });
 
