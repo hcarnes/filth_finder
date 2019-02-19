@@ -8,9 +8,9 @@ const fetchDetails = async camis => {
   return response.data;
 };
 class Establishment {
-  static async near(lng, lat) {
+  static async near(lng, lat, search = "") {
     const establishments = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/near_me`, {
-      params: { lat, lng }
+      params: { lat, lng, search }
     });
 
     return establishments.data;

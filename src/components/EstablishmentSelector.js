@@ -1,27 +1,35 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Establishment from "../models/Establishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
-import { Heading, Box } from 'grommet';
+import { Heading, Box, TextInput } from "grommet";
 
-const EstablishmentSelector = (props) => {
+const EstablishmentSelector = props => {
+  const [search, setSearch] = useState("")
   const [establishments, setEstablishments] = useState(null);
-  const fetchEstablishments = async (longitude, latitude) => {
-    const fetchedEstablishments = await Establishment.near(longitude, latitude);
+  const fetchEstablishments = async (longitude, latitude, search) => {
+    const fetchedEstablishments = await Establishment.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
-  }
+  };
   useEffect(() => {
     if (props.coords) {
-      fetchEstablishments(props.coords.longitude, props.coords.latitude);
+      fetchEstablishments(props.coords.longitude, props.coords.latitude, search);
     }
-  }, [props.coords])
+  }, [props.coords, search]);
 
   if (props.isGeolocationEnabled) {
     if (establishments) {
       return (
         <Box align="center">
           <Heading color="brand">Establishments near you:</Heading>
-          <EstablishmentList establishments={establishments}/>
+          <TextInput
+            value={search}
+            placeholder="Search all establishments"
+            onChange={event => {
+              setSearch(event.target.value)
+            }}
+          />
+          <EstablishmentList establishments={establishments} />
         </Box>
       );
     } else {
@@ -30,7 +38,7 @@ const EstablishmentSelector = (props) => {
   } else {
     return <h1>Location not available</h1>;
   }
-}
+};
 
 export default geolocated({
   positionOptions: {
