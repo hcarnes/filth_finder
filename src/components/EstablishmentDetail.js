@@ -65,7 +65,8 @@ const EstablishmentDetail = (props) => {
           <Text>CAMIS: {camis}</Text>
           <ul className={styles.EstablishmentDetail}>
             <Accordion>
-              {establishment.inspections.map(inspection => {
+              {establishment.inspections
+              .map(inspection => {
                 return (
                   <AccordionPanel
                     label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
@@ -77,7 +78,7 @@ const EstablishmentDetail = (props) => {
                         style={{ textAlign: "left" }}
                       >
                         <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.map(v => {
+                          {inspection.violations.length > 0 ? inspection.violations.map(v => {
                             return (
                               <li key={inspection.date + v.code}>
                                 <p>
@@ -85,7 +86,7 @@ const EstablishmentDetail = (props) => {
                                 </p>
                               </li>
                             );
-                          })}
+                          }) : "No violations found 💯"}
                         </ul>
                       </Box>
                     </li>

@@ -21,11 +21,15 @@ class Establishment {
   static async detail(camis) {
     const detailsData = await fetchDetails(camis);
     const aggViolations = violations => {
-      return violations.map(violation => {
-        return {
-          code: violation.violation_code,
-          description: violation.violation_description
-        };
+      return violations.flatMap(violation => {
+        if (violation.violation_code && violation.violation_description) {
+          return [{
+            code: violation.violation_code,
+            description: violation.violation_description
+          }];
+        } else {
+          return [];
+        }
       });
     };
     const aggInspections = details => {
