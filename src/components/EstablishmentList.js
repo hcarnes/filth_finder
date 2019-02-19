@@ -23,7 +23,7 @@ const EstablishmentList = ({ establishments }) => {
             <ListItem >
               <Text key={establishment.dba}>
                   <Link to={`/${establishment.camis}`}>
-                    {establishment.dba} - {establishment.grade}
+                    {establishment.dba}
                   </Link>
               </Text>
             </ListItem>
