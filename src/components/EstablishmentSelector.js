@@ -1,40 +1,35 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Establishment from "../models/Establishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
 import { Heading, Box } from 'grommet';
 
-class EstablishmentSelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { establishments: null };
+const EstablishmentSelector = (props) => {
+  const [establishments, setEstablishments] = useState(null);
+  const fetchEstablishments = async (longitude, latitude) => {
+    const fetchedEstablishments = await Establishment.near(longitude, latitude);
+    setEstablishments(fetchedEstablishments);
   }
-
-  componentDidUpdate = async prevProps => {
-    if (this.props.coords !== prevProps.coords) {
-      if (this.props.coords) {
-        const establishments = await Establishment.near(this.props.coords.longitude, this.props.coords.latitude);
-        this.setState({ establishments });
-      }
+  useEffect(() => {
+    if (props.coords) {
+      fetchEstablishments(props.coords.longitude, props.coords.latitude);
     }
-  };
+  })
 
-  render = props => {
-    if (this.props.isGeolocationEnabled) {
-      if (this.state.establishments) {
-        return (
-          <Box align="center">
-            <Heading color="brand">Establishments near you:</Heading>
-            <EstablishmentList establishments={this.state.establishments}/>
-          </Box>
-        );
-      } else {
-        return <h1>Loading Establishments near you</h1>;
-      }
+  if (props.isGeolocationEnabled) {
+    if (establishments) {
+      return (
+        <Box align="center">
+          <Heading color="brand">Establishments near you:</Heading>
+          <EstablishmentList establishments={establishments}/>
+        </Box>
+      );
     } else {
-      return <h1>Location not available</h1>;
+      return <h1>Loading Establishments near you</h1>;
     }
-  };
+  } else {
+    return <h1>Location not available</h1>;
+  }
 }
 
 export default geolocated({
