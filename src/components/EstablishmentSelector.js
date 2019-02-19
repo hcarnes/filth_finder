@@ -2,6 +2,7 @@ import React from "react";
 import Establishment from "../models/Establishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
+import { Heading, Box } from 'grommet';
 
 class EstablishmentSelector extends React.Component {
   constructor(props) {
@@ -22,10 +23,10 @@ class EstablishmentSelector extends React.Component {
     if (this.props.isGeolocationEnabled) {
       if (this.state.establishments) {
         return (
-          <>
-            <h1>Establishments near you:</h1>
-            <EstablishmentList establishments={this.state.establishments} />
-          </>
+          <Box align="center">
+            <Heading color="brand">Establishments near you:</Heading>
+            <EstablishmentList establishments={this.state.establishments}/>
+          </Box>
         );
       } else {
         return <h1>Loading Establishments near you</h1>;

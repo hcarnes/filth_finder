@@ -1,50 +1,106 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Establishment from "../models/Establishment";
-class EstablishmentDetail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { camis: props.match.params.camis, establishment: null };
+import styles from "./EstablishmentDetail.module.css";
+import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
+
+const EstablishmentDetail = (props) => {
+  const camis = props.match.params.camis;
+  const [establishment, setEstablishment] = useState(null);
+
+  const fetchEstablishment = async (camis) => {
+    const fetchedEstablishment = await Establishment.detail(camis);
+    setEstablishment(fetchedEstablishment);
   }
 
-  componentDidMount = async () => {
-    const establishment = await Establishment.detail(this.state.camis);
-    this.setState({establishment})
-  };
+  useEffect(() => {
+    fetchEstablishment(camis)
+  }, [camis]);
 
-  render = () => {
-    const establishment = this.state.establishment;
-    if (establishment) {
-      return (
-        <>
-          <h1>Violations at {establishment.dba} </h1>
-          <p>CAMIS: {this.state.camis}</p>
-          <ul>
-            {establishment.inspections.map(inspection => {
-              return (
-                <li key={inspection.date}>
-                  Grade: {inspection.grade} - Date: {inspection.date}
-                  <br />
-                  Violations:
-                  <ul>
-                    {inspection.violations.map(v => {
-                      return (
-                        <li key={inspection.date + v.code}>
-                          <p>Code: {v.code}</p>
-                          <p>Description: {v.description}</p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      );
+  const gradeColor = (grade) => {
+    if (grade === "A") {
+      return "mediumseagreen"
+    } else if (grade === "B") {
+      return "goldenrod"
+    } else if (grade === "C") {
+      return "crimson"
+    } else
+      return "black"
+  }
+
+  const handleMissingGrade = (grade) => {
+    if (grade) {
+      return grade
     } else {
-      return <div>Loading violations for CAMIS: {this.state.camis}</div>;
+      return "No grade assigned."
     }
-  };
-}
+  }
+
+  const AccordionLabel = ({date, grade}) => {
+    return (
+      <Box pad={{ horizontal: 'xsmall' }}>
+        <Heading level={4}>
+          <span>{`${new Date(date).toLocaleDateString()}`}</span> -
+          <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade)}</span>
+        </Heading>
+      </Box>
+    )
+  }
+
+  
+  const cleanDescription = (description) => {
+    const regex = /Â/gi;
+
+    if (description) {
+      return description.replace(regex, '');
+    } else {
+      return "";
+    }
+  }
+
+  if (establishment) {
+    return (
+      <>
+        <Box align="center">
+          <Heading color="brand">Violations at {establishment.dba}</Heading>
+          <Text>CAMIS: {camis}</Text>
+          <ul className={styles.EstablishmentDetail}>
+            <Accordion>
+              {establishment.inspections
+              .map(inspection => {
+                return (
+                  <AccordionPanel
+                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
+                  >
+                    <li key={inspection.date}>
+                      <Box
+                        pad="medium"
+                        background="light-2"
+                        style={{ textAlign: "left" }}
+                      >
+                        <ul className={styles.EstablishmentDetail}>
+                          {inspection.violations.length > 0 ? inspection.violations.map(v => {
+                            return (
+                              <li key={inspection.date + v.code}>
+                                <p>
+                                  {v.code} - {cleanDescription(v.description)}
+                                </p>
+                              </li>
+                            );
+                          }) : "No violations found 💯"}
+                        </ul>
+                      </Box>
+                    </li>
+                  </AccordionPanel>
+                );
+              })}
+            </Accordion>
+          </ul>
+        </Box>
+      </>
+    );
+  } else {
+    return <div>Loading violations for CAMIS: {camis}</div>;
+  }
+};
 
 export default EstablishmentDetail;

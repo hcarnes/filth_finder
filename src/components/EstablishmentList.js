@@ -1,19 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Box, Text } from "grommet";
+
+const List = props => <Box fill tag="ul" border="top" {...props} list-style-type="none" />;
+
+const ListItem = props => (
+  <Box
+    tag="li"
+    border="bottom"
+    pad="small"
+    direction="row"
+    justify="between"
+    {...props}
+  />
+);
 
 const EstablishmentList = ({ establishments }) => {
   return (
-    <>
-      <ul>
+    <List alignContent="start">
         {establishments.map(establishment => {
           return (
-            <li key={establishment.camis}>
-              <Link to={`/${establishment.camis}`}>{establishment.dba}</Link>
-            </li>
+            <ListItem >
+              <Text key={establishment.dba}>
+                  <Link to={`/${establishment.camis}`}>
+                    {establishment.dba}
+                  </Link>
+              </Text>
+            </ListItem>
           );
         })}
-      </ul>
-    </>
+    </List>
   );
 };
 
