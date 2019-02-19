@@ -14,7 +14,7 @@ const EstablishmentSelector = (props) => {
     if (props.coords) {
       fetchEstablishments(props.coords.longitude, props.coords.latitude);
     }
-  })
+  }, [props.isGeolocationEnabled])
 
   if (props.isGeolocationEnabled) {
     if (establishments) {
