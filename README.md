@@ -7,7 +7,7 @@
 Users can find restaurants in their NYC neighborhood, click on a restaurant, and view health inspection grades and violations found at that restaurant via [NYC's Open Data API](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j).
 
 ## Installation
-Clone the (backend)[https://github.com/hcarnes/filth_finder_backend] repository.
+Clone the [backend](https://github.com/hcarnes/filth_finder_backend) repository.
 
 Run `rails s -p 3001`
 
