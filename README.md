@@ -2,15 +2,18 @@
 
 >React frontend/Ruby on Rails backend
 
-<img src="https://i.imgur.com/PkqpWMk.png" title="source: imgur.com" width="200" class="img-responsive">
+<img src="https://i.imgur.com/PkqpWMk.png" title="rat" width="100" class="img-responsive">
 
-Users can find restaurants in their NYC neighborhood, click on a restaurant, and view health inspection grades and violations found at that restaurant via NYC's Open Data API.
+Users can find restaurants in their NYC neighborhood, click on a restaurant, and view health inspection grades and violations found at that restaurant via [NYC's Open Data API](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j).
 
 ## Installation
-Clone this repository
-Also, clone the backend here:
+Clone the (backend)[https://github.com/hcarnes/filth_finder_backend] repository.
 
-Run `foreman start -p 3000`
+Run `rails s -p 3001`
+
+Clone this repository.
+
+Run `yarn start`
 
 ## Contributing
 
