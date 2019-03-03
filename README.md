@@ -17,7 +17,7 @@ Run `yarn start`
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/hcarnes/socratic. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/hcarnes/filth_finder. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -25,4 +25,4 @@ The app is available as open source under the terms of the [Apache 2 License](ht
 
 ## Code of Conduct
 
-Everyone interacting in the Greenthumb Gardens codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/greenthumb/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Filth Finder codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/filth_finder/blob/master/CODE_OF_CONDUCT.md).
