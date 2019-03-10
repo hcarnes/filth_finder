@@ -50,7 +50,7 @@ class Establishment {
     const establishmentDetail = {
       dba: detailsData[0].dba,
       inspections: aggInspections(detailsData).sort(
-        (a, b) => Date.parse(b.date) - Date.parse(a.date)
+        (a, b) => Date.parse(a.date) - Date.parse(b.date)
       )
     };
 
