@@ -1,11 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Establishment from "../models/Establishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
-import { Heading, Box, TextInput } from "grommet";
+import { Heading, Box, TextInput, Meter } from "grommet";
+
+const LoadingSpinner = () => {
+  const timerRef = useRef(10)
+  const [timer, setTimer] = useState(10)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      timerRef.current = timerRef.current < 100 ? timerRef.current + 5 : 0;
+      setTimer(timerRef.current);
+    }, 100);
+
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
+
+  return (
+    <Box align="center" pad="large">
+      <Meter
+        type="circle"
+        background="light-2"
+        values={[{ value: timer, color: timer > 50 ? "accent-2" : "accent-1" }]}
+      />
+    </Box>
+  );
+}
 
 const EstablishmentSelector = props => {
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
     const fetchedEstablishments = await Establishment.near(longitude, latitude, search);
@@ -33,7 +58,12 @@ const EstablishmentSelector = props => {
         </Box>
       );
     } else {
-      return <h1>Loading Establishments near you</h1>;
+      return (
+      <>
+        <h1>Loading establishments near you</h1>
+        <LoadingSpinner />
+      </>
+      );
     }
   } else {
     return <h1>Location not available</h1>;
