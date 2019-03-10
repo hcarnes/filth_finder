@@ -64,7 +64,7 @@ const EstablishmentDetail = (props) => {
           <Heading color="brand">Violations at {establishment.dba}</Heading>
           <Text>CAMIS: {camis}</Text>
           <ul className={styles.EstablishmentDetail}>
-            <Accordion>
+            <Accordion direction="column-reverse">
               {establishment.inspections
               .map(inspection => {
                 return (
@@ -86,7 +86,12 @@ const EstablishmentDetail = (props) => {
                                 </p>
                               </li>
                             );
-                          }) : "No violations found 💯"}
+                          }) : (
+                            <li key={inspection.date}>
+                              <p>
+                                No violations found <span role="img" aria-label="one hundred">💯</span>
+                              </p>
+                            </li>)}
                         </ul>
                       </Box>
                     </li>
