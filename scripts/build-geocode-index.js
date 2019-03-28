@@ -4,6 +4,7 @@ import {Storage} from '@google-cloud/storage'
 async function updateGeocodedEstablishmentsIndex() {
   const establishmentListing = await axios.get("https://data.cityofnewyork.us/resource/9w7m-hzhe.json?$group=camis,boro,building,street,zipcode,dba&$select=camis,boro,building,street,zipcode,dba&$limit=50000")
 
+  const startTime = Date.now();
   const geocodedEstablishments = []
   let numberGeocoded = 0
   
@@ -19,7 +20,11 @@ async function updateGeocodedEstablishmentsIndex() {
       }
       geocodedEstablishments.push(geocodedEstablishment)
       numberGeocoded += 1
-      if (numberGeocoded % 10 == 0) console.log("Geocoded %d establishments", numberGeocoded)
+      if (numberGeocoded % 10 == 0) {
+        const elapsedTime = (Date.now()-startTime)/1000
+        const rate = (numberGeocoded/elapsedTime).toFixed(2)
+        console.log("Geocoded %d establishments in %d seconds (Rate: %d/s)", numberGeocoded, elapsedTime, rate)
+      }
     } catch(err) {
       console.log(`encountered error: ${err} when geocoding %j`, establishment)
     }
