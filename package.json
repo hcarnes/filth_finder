@@ -22,7 +22,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-geocode-index": "babel-node scripts/build-geocode-index.js"
+    "build-geocode-index": "babel-node scripts/build-geocode-index.js",
+    "deploy": "react-scripts build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
