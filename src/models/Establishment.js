@@ -9,9 +9,7 @@ const fetchDetails = async camis => {
 };
 class Establishment {
   static async near(lng, lat, search = "") {
-    const establishments = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/near_me`, {
-      params: { lat, lng, search }
-    });
+    const establishments = await axios.get(`https://storage.googleapis.com/filth-finder/index.json`);
 
     return establishments.data;
   }
