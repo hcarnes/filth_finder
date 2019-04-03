@@ -45,6 +45,7 @@ function storeToGCS(indexArray) {
     gzip: true,
     metadata: {
       cacheControl: 'public, max-age=86400',
+      contentType: 'application/json'
     },
   })
   
