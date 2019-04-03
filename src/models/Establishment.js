@@ -12,9 +12,16 @@ class Establishment {
   static async near(lng, lat, search = null) {
     const establishments = await axios.get(`https://storage.googleapis.com/filth-finder/index.json`);
 
-    const sortedEstablishments = establishments.data.sort((a, b) => {
-      return haversine({lat: a.latitude, lng: a.longitude}, {lat, lng}) - haversine({lat: b.latitude, lng: b.longitude}, {lat, lng})
-    });
+    const establishmentsWithDistance = establishments.data.flatMap(e => {
+      const distance = haversine({lat: e.latitude, lng: e.longitude}, {lat, lng})
+      if (isNaN(distance)) {
+        return []
+      } else {
+        return {...e, distance}
+      }
+    })
+
+    const sortedEstablishments = establishmentsWithDistance.sort((a, b) => a.distance - b.distance);
 
     if (search) {
       return sortedEstablishments.filter((e) => e.dba && e.dba.toLowerCase().includes(search.toLowerCase())).slice(0, 20)
