@@ -1,4 +1,5 @@
 import axios from "axios";
+import haversine from "haversine-distance";
 
 const fetchDetails = async camis => {
   const response = await axios.get(
@@ -11,7 +12,11 @@ class Establishment {
   static async near(lng, lat, search = "") {
     const establishments = await axios.get(`https://storage.googleapis.com/filth-finder/index.json`);
 
-    return establishments.data;
+    const sortedEstablishments = establishments.data.sort((a, b) => {
+      return haversine({lat: a.latitude, lng: a.longitude}, {lat, lng}) - haversine({lat: b.latitude, lng: b.longitude}, {lat, lng})
+    });
+
+    return sortedEstablishments.slice(0, 20)
   }
 
   static async detail(camis) {
