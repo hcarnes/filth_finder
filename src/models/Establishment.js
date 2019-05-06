@@ -1,4 +1,5 @@
 import axios from "axios";
+import haversine from "haversine-distance";
 
 const fetchDetails = async camis => {
   const response = await axios.get(
@@ -8,12 +9,25 @@ const fetchDetails = async camis => {
   return response.data;
 };
 class Establishment {
-  static async near(lng, lat, search = "") {
-    const establishments = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/near_me`, {
-      params: { lat, lng, search }
-    });
+  static async near(lng, lat, search = null) {
+    const establishments = await axios.get(`https://storage.googleapis.com/filth-finder/index.json`);
 
-    return establishments.data;
+    const establishmentsWithDistance = establishments.data.flatMap(e => {
+      const distance = haversine({lat: e.latitude, lng: e.longitude}, {lat, lng})
+      if (isNaN(distance)) {
+        return []
+      } else {
+        return {...e, distance}
+      }
+    })
+
+    const sortedEstablishments = establishmentsWithDistance.sort((a, b) => a.distance - b.distance);
+
+    if (search) {
+      return sortedEstablishments.filter((e) => e.dba && e.dba.toLowerCase().includes(search.toLowerCase())).slice(0, 20)
+    } else {
+      return sortedEstablishments.slice(0, 20)
+    }  
   }
 
   static async detail(camis) {
