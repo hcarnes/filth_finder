@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Establishment from "../models/Establishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
-import { Heading, Box, TextInput, Meter } from "grommet";
+import { Heading, Box, TextInput, Meter, Anchor, Text } from "grommet";
+import { Github } from 'grommet-icons';
 
 const LoadingSpinner = () => {
   const timerRef = useRef(10)
@@ -46,12 +47,18 @@ const EstablishmentSelector = props => {
     if (establishments) {
       return (
         <Box align="center">
+          <Anchor
+            target="_blank"
+            a11yTitle="Get your hands dirty on Github"
+            href="https://github.com/hcarnes/filth_finder"
+            icon={<Github color="brand" size="large" />}
+          />
           <Heading color="brand">Establishments near you:</Heading>
           <TextInput
             value={search}
             placeholder="Search all establishments"
             onChange={event => {
-              setSearch(event.target.value)
+              setSearch(event.target.value);
             }}
           />
           <EstablishmentList establishments={establishments} />
