@@ -37,7 +37,7 @@ class Establishment {
         if (violation.violation_code && violation.violation_description) {
           return [{
             code: violation.violation_code,
-            description: violation.violation_description
+            description: violation.violation_description,
           }];
         } else {
           return [];
@@ -45,17 +45,18 @@ class Establishment {
       });
     };
     const aggInspections = details => {
-      const violationDateBuckets = details.reduce((objectsByKeyValue, obj) => {
-        const value = obj["inspection_date"];
+      const inspectionViolations = details.reduce((objectsByKeyValue, obj) => {
+        const value = obj["inspection_date"] + obj["inspection_type"]; 
         objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
         return objectsByKeyValue;
       }, {});
-      return Object.values(violationDateBuckets).map(
-        violationsByInspectionDate => {
+      return Object.values(inspectionViolations).map(
+        groupedViolations => {
           return {
-            grade: violationsByInspectionDate[0].grade,
-            date: violationsByInspectionDate[0].inspection_date,
-            violations: aggViolations(violationsByInspectionDate)
+            grade: groupedViolations[0].grade,
+            score: groupedViolations[0].score,
+            date: groupedViolations[0].inspection_date,
+            violations: aggViolations(groupedViolations),
           };
         }
       );

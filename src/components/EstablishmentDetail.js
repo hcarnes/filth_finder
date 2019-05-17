@@ -27,20 +27,30 @@ const EstablishmentDetail = (props) => {
       return "black"
   }
 
-  const handleMissingGrade = (grade) => {
-    if (grade) {
-      return grade
+  const handleMissingGrade = (grade, score) => {
+    if (grade && grade !== "Z") {
+      return `- ${grade}`
+    } else if (score){
+      return <span role="img" aria-label="Grade pending">- &#x23F3;</span>;
     } else {
-      return "No grade assigned."
+      return null
     }
   }
 
-  const AccordionLabel = ({date, grade}) => {
+  const handleScore = (score) => {
+    if (score) {
+      return `(${score})`
+    } else {
+      return null
+    }
+  }
+
+  const AccordionLabel = ({date, grade, score}) => {
     return (
       <Box pad={{ horizontal: 'xsmall' }}>
         <Heading level={4}>
-          <span>{`${new Date(date).toLocaleDateString()}`}</span> -
-          <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade)}</span>
+          <span>{`${new Date(date).toLocaleDateString()}`}</span>
+          <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade, score)} {handleScore(score)}</span>
         </Heading>
       </Box>
     )
@@ -69,7 +79,7 @@ const EstablishmentDetail = (props) => {
               .map(inspection => {
                 return (
                   <AccordionPanel
-                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} />}
+                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} score={inspection.score} />}
                   >
                     <li key={inspection.date}>
                       <Box
