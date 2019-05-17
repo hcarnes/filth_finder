@@ -27,13 +27,21 @@ const EstablishmentDetail = (props) => {
       return "black"
   }
 
-  const handleMissingGrade = (grade, score) => {
-    if (grade && grade !== "Z") {
-      return `- ${grade}`
-    } else if (score){
-      return <span role="img" aria-label="Grade pending">- &#x23F3;</span>;
+  const renderGrade = (grade, score, action) => {
+    if (action && action.includes("Closed")) {
+      return (
+        <span role="img" aria-label="Establishment closed">
+          - &#x1F922;
+        </span>
+      );
     } else {
-      return null
+      if (grade && grade !== "Z") {
+        return `- ${grade}`
+      } else if (score){
+        return <span role="img" aria-label="Grade pending">- &#x23F3;</span>;
+      } else {
+        return null
+      }
     }
   }
 
@@ -45,12 +53,12 @@ const EstablishmentDetail = (props) => {
     }
   }
 
-  const AccordionLabel = ({date, grade, score}) => {
+  const AccordionLabel = ({date, grade, score, action}) => {
     return (
       <Box pad={{ horizontal: 'xsmall' }}>
         <Heading level={4}>
           <span>{`${new Date(date).toLocaleDateString()}`}</span>
-          <span style={{color: gradeColor(grade)}}> {handleMissingGrade(grade, score)} {handleScore(score)}</span>
+          <span style={{color: gradeColor(grade)}}> {renderGrade(grade, score, action)} {handleScore(score)}</span>
         </Heading>
       </Box>
     )
@@ -79,7 +87,7 @@ const EstablishmentDetail = (props) => {
               .map(inspection => {
                 return (
                   <AccordionPanel
-                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} score={inspection.score} />}
+                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} score={inspection.score} action={inspection.action} />}
                   >
                     <li key={inspection.date}>
                       <Box
@@ -87,6 +95,7 @@ const EstablishmentDetail = (props) => {
                         background="light-2"
                         style={{ textAlign: "left" }}
                       >
+                        <p>{inspection.action}</p>
                         <ul className={styles.EstablishmentDetail}>
                           {inspection.violations.length > 0 ? inspection.violations.map(v => {
                             return (

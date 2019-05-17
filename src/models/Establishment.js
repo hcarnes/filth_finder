@@ -55,6 +55,7 @@ class Establishment {
           return {
             grade: groupedViolations[0].grade,
             score: groupedViolations[0].score,
+            action: groupedViolations[0].action,
             date: groupedViolations[0].inspection_date,
             violations: aggViolations(groupedViolations),
           };
