@@ -65,6 +65,13 @@ class Establishment {
 
     const establishmentDetail = {
       dba: detailsData[0].dba,
+      address: [
+        detailsData[0].building,
+        detailsData[0].street,
+        detailsData[0].boro,
+        "NY",
+        detailsData[0].zipcode
+      ].join(" "),
       inspections: aggInspections(detailsData).sort(
         (a, b) => Date.parse(a.date) - Date.parse(b.date)
       )
@@ -79,3 +86,24 @@ class Establishment {
 }
 
 export default Establishment;
+
+// {
+//       "grade" : "C",
+//       "phone" : "9293377732",
+//       "violation_description" : "Food contact surface not properly washed, rinsed and sanitized after each use and following any activity when contamination may have occurred.",
+//       "zipcode" : "11201",
+//       "score" : "33",
+//       "dba" : "PINTO",
+//       "boro" : "BROOKLYN",
+//       "street" : "MONTAGUE ST",
+//       "grade_date" : "2018-06-04T00:00:00.000",
+//       "action" : "Violations were cited in the following area(s).",
+//       "inspection_date" : "2018-06-04T00:00:00.000",
+//       "critical_flag" : "Critical",
+//       "cuisine_description" : "Thai",
+//       "violation_code" : "06D",
+//       "building" : "128",
+//       "camis" : "50045118",
+//       "record_date" : "2019-05-17T06:01:02.000",
+//       "inspection_type" : "Cycle Inspection / Re-inspection"
+//    },

@@ -81,13 +81,20 @@ const EstablishmentDetail = (props) => {
         <Box align="center">
           <Heading color="brand">Violations at {establishment.dba}</Heading>
           <Text>CAMIS: {camis}</Text>
+          <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
             <Accordion direction="column-reverse">
-              {establishment.inspections
-              .map(inspection => {
+              {establishment.inspections.map(inspection => {
                 return (
                   <AccordionPanel
-                    label={<AccordionLabel date={inspection.date} grade={inspection.grade} score={inspection.score} action={inspection.action} />}
+                    label={
+                      <AccordionLabel
+                        date={inspection.date}
+                        grade={inspection.grade}
+                        score={inspection.score}
+                        action={inspection.action}
+                      />
+                    }
                   >
                     <li key={inspection.date}>
                       <Box
@@ -97,20 +104,27 @@ const EstablishmentDetail = (props) => {
                       >
                         <p>{inspection.action}</p>
                         <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.length > 0 ? inspection.violations.map(v => {
-                            return (
-                              <li key={inspection.date + v.code}>
-                                <p>
-                                  {v.code} - {cleanDescription(v.description)}
-                                </p>
-                              </li>
-                            );
-                          }) : (
+                          {inspection.violations.length > 0 ? (
+                            inspection.violations.map(v => {
+                              return (
+                                <li key={inspection.date + v.code}>
+                                  <p>
+                                    {v.code} -{" "}
+                                    {cleanDescription(v.description)}
+                                  </p>
+                                </li>
+                              );
+                            })
+                          ) : (
                             <li key={inspection.date}>
                               <p>
-                                No violations found <span role="img" aria-label="one hundred">💯</span>
+                                No violations found{" "}
+                                <span role="img" aria-label="one hundred">
+                                  💯
+                                </span>
                               </p>
-                            </li>)}
+                            </li>
+                          )}
                         </ul>
                       </Box>
                     </li>
