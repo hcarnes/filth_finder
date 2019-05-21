@@ -83,10 +83,11 @@ const EstablishmentDetail = (props) => {
           <Text>CAMIS: {camis}</Text>
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
-            <Accordion direction="column-reverse">
+            <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
               {establishment.inspections.map(inspection => {
                 return (
                   <AccordionPanel
+                    data-heap="Establishment Violation Accordion Panel"
                     label={
                       <AccordionLabel
                         date={inspection.date}

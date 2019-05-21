@@ -68,6 +68,7 @@ const EstablishmentSelector = props => {
             onChange={event => {
               setSearch(event.target.value);
             }}
+            data-heap="Establishment Search Box"
           />
           <EstablishmentList establishments={establishments} />
         </Box>
