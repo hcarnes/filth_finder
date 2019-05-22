@@ -43,6 +43,26 @@ const EstablishmentSelector = props => {
     }
   }, [props.coords, search]);
 
+  useEffect(() => {
+    if (window.heap) {
+      if (props.isGeolocationEnabled) {
+        if (props.coords) {
+          window.heap.track("Geolocation coordinates received", {
+            accuracy: props.coords.accuracy,
+            altitude: props.coords.altitude,
+            altitudeAccuracy: props.coords.altitudeAccuracy,
+            heading: props.coords.heading,
+            latitude: props.coords.latitude,
+            longitude: props.coords.longitude,
+            speed: props.coords.speed
+          });
+        }
+      } else if (props.isGeolocationAvailable) {
+        window.heap.track("Geolocation not allowed by user", {});
+      }
+    }
+  }, [props.isGeolocationEnabled, props.coords])
+
   if (props.isGeolocationEnabled) {
     if (establishments) {
       return (
