@@ -2,17 +2,13 @@
 
 >React frontend/Ruby on Rails backend
 
-<img src="https://i.imgur.com/PkqpWMk.png" title="rat" width="100" class="img-responsive">
+<img src="The-Filth-Finder.svg" alt="The filth finder rat with an magnifying glass, like a detective." height="350" class="img-responsive">
 
 Users can find restaurants in their NYC neighborhood, click on a restaurant, and view health inspection grades and violations found at that restaurant via [NYC's Open Data API](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j).
 
 Click [here](https://filth-finder-nyc.herokuapp.com/) to check it out live.
 
 ## Installation
-Clone the [backend](https://github.com/hcarnes/filth_finder_backend) repository.
-
-Run `rails s -p 3001`
-
 Clone this repository.
 
 Run `yarn start`
