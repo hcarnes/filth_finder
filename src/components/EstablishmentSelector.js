@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Establishment from "../models/Establishment";
+import NYCEstablishment from "../models/NYCEstablishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
 import { Heading, Box, TextInput, Meter, Anchor } from "grommet";
@@ -34,7 +34,7 @@ const EstablishmentSelector = props => {
   const [search, setSearch] = useState("");
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
-    const fetchedEstablishments = await Establishment.near(longitude, latitude, search);
+    const fetchedEstablishments = await NYCEstablishment.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
   };
   useEffect(() => {

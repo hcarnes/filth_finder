@@ -1,23 +1,55 @@
 import axios from "axios";
 import haversine from "haversine-distance";
+import {Establishment, EstablishmentDetail, IInspectionInfo} from "./IInspectionInfo";
 
-const fetchDetails = async camis => {
-  const response = await axios.get(
+type LocationIndexEntry = {
+  dba: string,
+  longitude: number,
+  latitude: number,
+  camis: string,
+}
+
+type EstablishmentInspectionResult = {
+  critical_flag: string,
+  building: string,
+  score: string,
+  violation_description: string,
+  violation_code: string,
+  record_date: string,
+  camis: string,
+  phone: string,
+  zipcode: string,
+  boro: string,
+  dba: string,
+  inspection_date: string,
+  cuisine_description: string,
+  street: string,
+  inspection_type: string,
+  action: string,
+  grade?: string,
+}
+
+const fetchDetails = async (camis: string) => {
+  const response = await axios.get<EstablishmentInspectionResult[]>(
     "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
     { params: { camis } }
   );
   return response.data;
 };
-class Establishment {
-  static async near(lng, lat, search = null) {
-    const establishments = await axios.get(`https://storage.googleapis.com/filth-finder/index.json`);
 
-    const establishmentsWithDistance = establishments.data.flatMap(e => {
+type NYCEstablishment = Establishment
+
+
+const NYCEstablishment: IInspectionInfo = {
+  async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
+    const establishments = await axios.get<LocationIndexEntry[]>(`https://storage.googleapis.com/filth-finder/index.json`);
+
+    const establishmentsWithDistance = establishments.data.flatMap<Establishment>(e => {
       const distance = haversine({lat: e.latitude, lng: e.longitude}, {lat, lng})
       if (isNaN(distance)) {
         return []
       } else {
-        return {...e, distance}
+        return {distance, id: e.camis, dba: e.dba}
       }
     })
 
@@ -28,11 +60,11 @@ class Establishment {
     } else {
       return sortedEstablishments.slice(0, 20)
     }  
-  }
+  },
 
-  static async detail(camis) {
-    const detailsData = await fetchDetails(camis);
-    const aggViolations = violations => {
+  async detail(id: string): Promise<EstablishmentDetail> {
+    const detailsData = await fetchDetails(id);
+    const aggViolations = (violations: EstablishmentInspectionResult[]) => {
       return violations.flatMap(violation => {
         if (violation.violation_code && violation.violation_description) {
           return [{
@@ -44,13 +76,15 @@ class Establishment {
         }
       });
     };
-    const aggInspections = details => {
+    const aggInspections = (details: EstablishmentInspectionResult[]) => {
       const inspectionViolations = details.reduce((objectsByKeyValue, obj) => {
-        const value = obj["inspection_date"] + obj["inspection_type"]; 
-        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        const key = obj.inspection_date + obj.inspection_type; 
+        objectsByKeyValue.set(key, (objectsByKeyValue.get(key) || []).concat(obj));
+
         return objectsByKeyValue;
-      }, {});
-      return Object.values(inspectionViolations).map(
+      }, (new Map<string, EstablishmentInspectionResult[]>()));
+
+      return Array.from(inspectionViolations.values()).map(
         groupedViolations => {
           return {
             grade: groupedViolations[0].grade,
@@ -76,13 +110,9 @@ class Establishment {
         (a, b) => Date.parse(a.date) - Date.parse(b.date)
       )
     };
-
-    if (establishmentDetail) {
-      return establishmentDetail;
-    } else {
-      return null;
-    }
+    
+    return establishmentDetail;
   }
 }
 
-export default Establishment;
+export default NYCEstablishment;

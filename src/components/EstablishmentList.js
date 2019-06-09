@@ -22,7 +22,7 @@ const EstablishmentList = ({ establishments }) => {
           return (
             <ListItem >
               <Text key={establishment.dba}>
-                  <Link to={`/${establishment.camis}`} data-heap="Establishment Item">
+                  <Link to={`/${establishment.id}`} data-heap="Establishment Item">
                     {establishment.dba}
                   </Link>
               </Text>
