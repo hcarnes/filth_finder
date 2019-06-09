@@ -1,15 +1,12 @@
 import axios from "axios";
 import haversine from "haversine-distance";
+import {Establishment, EstablishmentDetail, IInspectionInfo} from "./IInspectionInfo";
 
 type LocationIndexEntry = {
   dba: string,
   longitude: number,
   latitude: number,
   camis: string,
-}
-
-type Establishment = LocationIndexEntry & {
-  distance: number
 }
 
 type EstablishmentInspectionResult = {
@@ -32,30 +29,6 @@ type EstablishmentInspectionResult = {
   grade?: string,
 }
 
-type Violation = {
-  code: string,
-  description: string
-}
-
-type InspectionResult = {
-  grade?: string;
-  score: string;
-  action: string;
-  date: string;
-  violations: Violation[]
-}
-
-type EstablishmentDetail = {
-  dba: string;
-  address: string;
-  inspections: InspectionResult[]
-}
-
-interface IInspectionInfo {
-  near(lng: number, lat: number, search?: string): Promise<Establishment[]>,
-  detail(camis: string): Promise<EstablishmentDetail>
-}
-
 const fetchDetails = async (camis: string) => {
   const response = await axios.get<EstablishmentInspectionResult[]>(
     "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
@@ -64,8 +37,10 @@ const fetchDetails = async (camis: string) => {
   return response.data;
 };
 
+type NYCEstablishment = Establishment
 
-const Establishment: IInspectionInfo = {
+
+const NYCEstablishment: IInspectionInfo = {
   async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
     const establishments = await axios.get<LocationIndexEntry[]>(`https://storage.googleapis.com/filth-finder/index.json`);
 
@@ -74,7 +49,7 @@ const Establishment: IInspectionInfo = {
       if (isNaN(distance)) {
         return []
       } else {
-        return {...e, distance}
+        return {distance, id: e.camis, dba: e.dba}
       }
     })
 
@@ -140,4 +115,4 @@ const Establishment: IInspectionInfo = {
   }
 }
 
-export default Establishment;
+export default NYCEstablishment;

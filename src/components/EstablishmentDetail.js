@@ -1,20 +1,20 @@
 import React, {useState, useEffect} from "react";
-import Establishment from "../models/Establishment";
+import NYCEstablishment from "../models/NYCEstablishment";
 import styles from "./EstablishmentDetail.module.css";
 import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 
 const EstablishmentDetail = (props) => {
-  const camis = props.match.params.camis;
+  const id = props.match.params.id;
   const [establishment, setEstablishment] = useState(null);
 
-  const fetchEstablishment = async (camis) => {
-    const fetchedEstablishment = await Establishment.detail(camis);
+  const fetchEstablishment = async (id) => {
+    const fetchedEstablishment = await NYCEstablishment.detail(id);
     setEstablishment(fetchedEstablishment);
   }
 
   useEffect(() => {
-    fetchEstablishment(camis)
-  }, [camis]);
+    fetchEstablishment(id)
+  }, [id]);
 
   const gradeColor = (grade) => {
     if (grade === "A") {
@@ -80,7 +80,7 @@ const EstablishmentDetail = (props) => {
       <>
         <Box align="center">
           <Heading color="brand">Violations at {establishment.dba}</Heading>
-          <Text>CAMIS: {camis}</Text>
+          <Text>Establishment ID: {id}</Text>
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
             <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
@@ -138,7 +138,7 @@ const EstablishmentDetail = (props) => {
       </>
     );
   } else {
-    return <div>Loading violations for CAMIS: {camis}</div>;
+    return <div>Loading violations for Establishment ID: {id}</div>;
   }
 };
 
