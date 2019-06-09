@@ -25,5 +25,5 @@ export type EstablishmentDetail = {
 
 export interface IInspectionInfo {
   near(lng: number, lat: number, search?: string): Promise<Establishment[]>,
-  detail(camis: string): Promise<EstablishmentDetail>
+  detail(id: string): Promise<EstablishmentDetail>
 }

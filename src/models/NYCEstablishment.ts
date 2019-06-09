@@ -62,8 +62,8 @@ const NYCEstablishment: IInspectionInfo = {
     }  
   },
 
-  async detail(camis: string): Promise<EstablishmentDetail> {
-    const detailsData = await fetchDetails(camis);
+  async detail(id: string): Promise<EstablishmentDetail> {
+    const detailsData = await fetchDetails(id);
     const aggViolations = (violations: EstablishmentInspectionResult[]) => {
       return violations.flatMap(violation => {
         if (violation.violation_code && violation.violation_description) {
