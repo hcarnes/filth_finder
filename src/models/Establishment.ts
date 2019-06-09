@@ -32,6 +32,30 @@ type EstablishmentInspectionResult = {
   grade?: string,
 }
 
+type Violation = {
+  code: string,
+  description: string
+}
+
+type InspectionResult = {
+  grade?: string;
+  score: string;
+  action: string;
+  date: string;
+  violations: Violation[]
+}
+
+type EstablishmentDetail = {
+  dba: string;
+  address: string;
+  inspections: InspectionResult[]
+}
+
+interface IInspectionInfo {
+  near(lng: number, lat: number, search?: string): Promise<Establishment[]>,
+  detail(camis: string): Promise<EstablishmentDetail>
+}
+
 const fetchDetails = async (camis: string) => {
   const response = await axios.get<EstablishmentInspectionResult[]>(
     "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
@@ -41,8 +65,8 @@ const fetchDetails = async (camis: string) => {
 };
 
 
-const Establishment = {
-  async near(lng: number, lat: number, search?: string) {
+const Establishment: IInspectionInfo = {
+  async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
     const establishments = await axios.get<LocationIndexEntry[]>(`https://storage.googleapis.com/filth-finder/index.json`);
 
     const establishmentsWithDistance = establishments.data.flatMap<Establishment>(e => {
@@ -63,7 +87,7 @@ const Establishment = {
     }  
   },
 
-  async detail(camis: string) {
+  async detail(camis: string): Promise<EstablishmentDetail> {
     const detailsData = await fetchDetails(camis);
     const aggViolations = (violations: EstablishmentInspectionResult[]) => {
       return violations.flatMap(violation => {
@@ -111,12 +135,8 @@ const Establishment = {
         (a, b) => Date.parse(a.date) - Date.parse(b.date)
       )
     };
-
-    if (establishmentDetail) {
-      return establishmentDetail;
-    } else {
-      return null;
-    }
+    
+    return establishmentDetail;
   }
 }
 
