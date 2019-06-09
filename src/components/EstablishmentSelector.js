@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import NYCEstablishment from "../models/NYCEstablishment";
+import SeattleEstablishment from "../models/SeattleEstablishment";
 import EstablishmentList from "./EstablishmentList";
 import { geolocated } from "react-geolocated";
 import { Heading, Box, TextInput, Meter, Anchor } from "grommet";
@@ -34,7 +35,10 @@ const EstablishmentSelector = props => {
   const [search, setSearch] = useState("");
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
-    const fetchedEstablishments = await NYCEstablishment.near(longitude, latitude, search);
+    // TODO: Location based city selection
+    const inspectionInfoImpl = true ? SeattleEstablishment : NYCEstablishment
+  
+    const fetchedEstablishments = await inspectionInfoImpl.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
   };
   useEffect(() => {

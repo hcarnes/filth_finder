@@ -3,52 +3,57 @@ import haversine from "haversine-distance";
 import {Establishment, EstablishmentDetail, IInspectionInfo} from "./IInspectionInfo";
 
 type LocationIndexEntry = {
-  dba: string,
+  inspection_business_name: string,
   longitude: number,
   latitude: number,
-  camis: string,
+  Business_ID: string,
 }
 
 type EstablishmentInspectionResult = {
-  critical_flag: string,
-  building: string,
-  score: string,
-  violation_description: string,
-  violation_code: string,
-  record_date: string,
-  camis: string,
-  phone: string,
-  zipcode: string,
-  boro: string,
-  dba: string,
+  business_id: string,
+  violation_type: string,
+  description: string,
+  inspection_closed_business: boolean,
+  grade: string,
   inspection_date: string,
-  cuisine_description: string,
-  street: string,
+  latitude: string,
+  name:string,
+  phone:string,
+  zip_code: string,
+  inspection_score: string,
+  violation_points: string,
+  city: string,
+  program_identifier: string,
+  inspection_serial_num: string,
+  inspection_result: string,
+  address: string,
+  violation_description: string,
+  longitude:string,
   inspection_type: string,
-  action: string,
-  grade?: string,
+  inspection_business_name:string,
+  violation_record_id: string,
 }
 
-const fetchDetails = async (camis: string) => {
+type SeattleEstablishment = Establishment
+
+const fetchDetails = async (Business_ID: string) => {
   const response = await axios.get<EstablishmentInspectionResult[]>(
-    "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
-    { params: { camis } }
+    "https://data.kingcounty.gov/resource/f29f-zza5.json",
+    { params: { Business_ID } }
   );
   return response.data;
 };
 
-type NYCEstablishment = Establishment
-
-const NYCEstablishment: IInspectionInfo = {
+const SeattleEstablishment: IInspectionInfo = {
   async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
-    const establishments = await axios.get<LocationIndexEntry[]>(`https://storage.googleapis.com/filth-finder/index.json`);
+    const establishments = await axios.get<LocationIndexEntry[]>("https://data.kingcounty.gov/resource/f29f-zza5.json?$group=Business_ID,inspection_business_name,longitude,latitude&$select=Business_ID,inspection_business_name,longitude,latitude&$limit=50000")
 
     const establishmentsWithDistance = establishments.data.flatMap<Establishment>(e => {
       const distance = haversine({lat: e.latitude, lng: e.longitude}, {lat, lng})
       if (isNaN(distance)) {
         return []
       } else {
-        return {distance, id: e.camis, dba: e.dba}
+        return {distance, id: e.Business_ID, dba: e.inspection_business_name}
       }
     })
 
@@ -58,16 +63,16 @@ const NYCEstablishment: IInspectionInfo = {
       return sortedEstablishments.filter((e) => e.dba && e.dba.toLowerCase().includes(search.toLowerCase())).slice(0, 20)
     } else {
       return sortedEstablishments.slice(0, 20)
-    }  
+    }
   },
 
   async detail(id: string): Promise<EstablishmentDetail> {
     const detailsData = await fetchDetails(id);
     const aggViolations = (violations: EstablishmentInspectionResult[]) => {
       return violations.flatMap(violation => {
-        if (violation.violation_code && violation.violation_description) {
+        if (violation.violation_type && violation.violation_description) {
           return [{
-            code: violation.violation_code,
+            code: violation.violation_type,
             description: violation.violation_description,
           }];
         } else {
@@ -87,8 +92,8 @@ const NYCEstablishment: IInspectionInfo = {
         groupedViolations => {
           return {
             grade: groupedViolations[0].grade,
-            score: groupedViolations[0].score,
-            action: groupedViolations[0].action,
+            score: groupedViolations[0].inspection_score,
+            action: groupedViolations[0].inspection_closed_business ? "Closed by DOH" : "No action taken",
             date: groupedViolations[0].inspection_date,
             violations: aggViolations(groupedViolations),
           };
@@ -97,13 +102,12 @@ const NYCEstablishment: IInspectionInfo = {
     };
 
     const establishmentDetail = {
-      dba: detailsData[0].dba,
+      dba: detailsData[0].inspection_business_name,
       address: [
-        detailsData[0].building,
-        detailsData[0].street,
-        detailsData[0].boro,
-        "NY",
-        detailsData[0].zipcode
+        detailsData[0].address,
+        detailsData[0].city,
+        detailsData[0].zip_code,
+        "WA"
       ].join(" "),
       inspections: aggInspections(detailsData).sort(
         (a, b) => Date.parse(a.date) - Date.parse(b.date)
@@ -114,4 +118,4 @@ const NYCEstablishment: IInspectionInfo = {
   }
 }
 
-export default NYCEstablishment;
+export default SeattleEstablishment;

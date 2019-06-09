@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import NYCEstablishment from "../models/NYCEstablishment";
+import SeattleEstablishment from "../models/SeattleEstablishment";
 import styles from "./EstablishmentDetail.module.css";
 import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 
@@ -8,7 +9,9 @@ const EstablishmentDetail = (props) => {
   const [establishment, setEstablishment] = useState(null);
 
   const fetchEstablishment = async (id) => {
-    const fetchedEstablishment = await NYCEstablishment.detail(id);
+    const inspectionInfoImpl = true ? SeattleEstablishment : NYCEstablishment
+
+    const fetchedEstablishment = await inspectionInfoImpl.detail(id);
     setEstablishment(fetchedEstablishment);
   }
 
