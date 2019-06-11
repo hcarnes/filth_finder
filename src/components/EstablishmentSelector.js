@@ -36,8 +36,9 @@ const EstablishmentSelector = props => {
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
     // TODO: Location based city selection
-    const inspectionInfoImpl = true ? SeattleEstablishment : NYCEstablishment
-  
+    const city = props.match.params.city;
+    const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
+    
     const fetchedEstablishments = await inspectionInfoImpl.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
   };
