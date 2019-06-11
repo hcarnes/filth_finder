@@ -44,6 +44,16 @@ const fetchDetails = async (Business_ID: string) => {
   return response.data;
 };
 
+const expandViolationDescription = (truncatedViolationDescription: string): string => {
+  const [code, rest] = truncatedViolationDescription.split(" - ");
+
+  switch (code) {
+    case "4100": return "4100 - Warewashing facilities properly installed, maintained, used; test strips available and used";
+    case "5000": return "5000 - Posting of permit; mobile establishment name easily visible";
+    default: return truncatedViolationDescription;
+  }
+}
+
 const SeattleEstablishment: IInspectionInfo = {
   async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
     const establishments = await axios.get<LocationIndexEntry[]>("https://data.kingcounty.gov/resource/f29f-zza5.json?$group=Business_ID,inspection_business_name,longitude,latitude&$select=Business_ID,inspection_business_name,longitude,latitude&$limit=50000")
@@ -73,7 +83,7 @@ const SeattleEstablishment: IInspectionInfo = {
         if (violation.violation_type && violation.violation_description) {
           return [{
             code: violation.violation_type,
-            description: violation.violation_description,
+            description: expandViolationDescription(violation.violation_description),
           }];
         } else {
           return [];
