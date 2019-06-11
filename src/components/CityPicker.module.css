@@ -1,6 +1,7 @@
 .CityPicker {
   display: flex;
   flex-direction: column;
+  padding-inline-start: 0px;
 }
 
 .CityPicker > li {
