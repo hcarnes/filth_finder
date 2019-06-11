@@ -34,13 +34,14 @@ const LoadingSpinner = () => {
 const EstablishmentSelector = props => {
   const [search, setSearch] = useState("");
   const [establishments, setEstablishments] = useState(null);
+  const [city, setCity] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
-    // TODO: Location based city selection
     const city = props.match.params.city;
     const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
     
     const fetchedEstablishments = await inspectionInfoImpl.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
+    setCity(city)
   };
   useEffect(() => {
     if (props.coords) {
@@ -95,7 +96,7 @@ const EstablishmentSelector = props => {
             }}
             data-heap="Establishment Search Box"
           />
-          <EstablishmentList establishments={establishments} />
+          <EstablishmentList establishments={establishments} city={city} />
         </Box>
       );
     } else {
