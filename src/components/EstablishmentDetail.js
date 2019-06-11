@@ -9,7 +9,6 @@ const EstablishmentDetail = (props) => {
   const [establishment, setEstablishment] = useState(null);
 
   const fetchEstablishment = async (id) => {
-    // the problem is there is no city
     const city = props.match.params.city;
     const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
