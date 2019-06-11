@@ -5,6 +5,7 @@ import EstablishmentList from "./EstablishmentList";
 import { Heading, Box, TextInput, Meter, Anchor } from "grommet";
 import { Github, Twitter } from 'grommet-icons';
 import { CityLocations } from '../models/Locations'
+import { useDebounce } from 'use-debounce'
 
 
 const LoadingSpinner = () => {
@@ -34,10 +35,11 @@ const LoadingSpinner = () => {
 
 const EstablishmentSelector = props => {
   const city = props.match.params.city.toLowerCase();
-  const [search, setSearch] = useState("");
+  const [searchState, setSearch] = useState("");
+  const [search] = useDebounce(searchState, 500);
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
-    const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
+    const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment;
     const fetchedEstablishments = await inspectionInfoImpl.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
   };
@@ -88,7 +90,7 @@ const EstablishmentSelector = props => {
         </Box>
         <Heading color="brand">Establishments near you:</Heading>
         <TextInput
-          value={search}
+          value={searchState}
           placeholder="Search all establishments"
           onChange={event => {
             setSearch(event.target.value);
