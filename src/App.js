@@ -17,11 +17,17 @@ const App = (props) => {
     return distanceFromSeattle < distanceFromNYC ? "/seattle" : "/nyc";
   }
 
+  const geoProps = {
+    coords: props.coords,
+    isGeolocationAvailable: props.isGeolocationAvailable,
+    isGeolocationEnabled: props.isGeolocationEnabled
+  }
+
   return (
     <Router>
       <div className="App">
-        <Route exact path="/" render={() => (props.coords) ? (<Redirect to={getNearestCity(props)}/>) : (<CityPicker/>)} />
-        <Route exact path="/:city" render={(routeProps) => <EstablishmentSelector {...routeProps} coords={props.coords} isGeolocationAvailable={props.isGeolocationAvailable} isGeolocationEnabled={props.isGeolocationEnabled}/>} />
+        <Route exact path="/" render={() => (props.coords) ? (<Redirect to={getNearestCity(props)}/>) : (<CityPicker {...geoProps} />)} />
+        <Route exact path="/:city" render={(routeProps) => <EstablishmentSelector {...routeProps} {...geoProps} /> } />
         <Route path="/:city/:id" component={EstablishmentDetail} />
       </div>
     </Router>

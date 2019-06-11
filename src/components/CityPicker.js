@@ -3,10 +3,19 @@ import { Link } from "react-router-dom";
 import { Heading, Box } from "grommet";
 import styles from "./CityPicker.module.css";
 
-const CityPicker = () => {
+const CityPicker = ({coords, isGeolocationAvailable, isGeolocationEnabled}) => {
   return (
     <Box align="center">
       <Heading color="brand">Select a city:</Heading>
+      { !isGeolocationAvailable || !isGeolocationEnabled ? (
+        <p>
+          Location not available
+        </p>
+      ) : (
+        <p>
+          Detecting your location...
+        </p>
+      )}
       <ul className={styles.CityPicker}>
         <li>
           <span role="img" aria-label="coffee">
