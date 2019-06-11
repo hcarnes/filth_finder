@@ -1,0 +1,17 @@
+.CityPicker {
+  display: flex;
+  flex-direction: column;
+}
+
+.CityPicker > li {
+  list-style-type: none;
+  font-size: 40px;
+  padding: 0 0 25px 0;
+  margin: 0;
+  flex-direction: row;
+  text-align: left;
+}
+
+.CityPicker li > span {
+  padding: 0 20px 0 0;
+}
