@@ -35,6 +35,9 @@ type EstablishmentInspectionResult = {
 }
 
 type SeattleEstablishment = Establishment
+type CodeMapping = {
+  [key: string] : string
+}
 
 const fetchDetails = async (Business_ID: string) => {
   const response = await axios.get<EstablishmentInspectionResult[]>(
@@ -45,13 +48,24 @@ const fetchDetails = async (Business_ID: string) => {
 };
 
 const expandViolationDescription = (truncatedViolationDescription: string): string => {
-  const [code, rest] = truncatedViolationDescription.split(" - ");
+  const [code, _rest] = truncatedViolationDescription.split(" - ");
 
-  switch (code) {
-    case "4100": return "4100 - Warewashing facilities properly installed, maintained, used; test strips available and used";
-    case "5000": return "5000 - Posting of permit; mobile establishment name easily visible";
-    default: return truncatedViolationDescription;
+  const codeMapping: CodeMapping = {
+    "4000": "4000 - Food and non-food surfaces properly used and constructed; cleanable",
+    "4100": "4100 - Warewashing facilities properly installed, maintained, used; test strips available and used",
+    "5000": "5000 - Posting of permit; mobile establishment name easily visible",
+    "1900": "1900 - No room temperature storage; proper use of time as a control",
+    "1710": "1710 - Proper Hot Holding Temperatures (<135°F)",
+    "2110": "2110 - Proper cold holding temperatures (>41°F)",
+    "2120": "2120 - Proper cold holding temperatures between 42°F to 45°F",
+    "2200": "2200 - Accurate thermometer provided and used to evaluate temperature of PHF (Potentially Hazardous Foods)",
+    "3300": "3300 - Potential food contamination prevented during delivery, preparation, storage, display",
+    "1400": "1400 - Raw meats below and away from RTE (Ready to Eat) food",
+    "0500": "0500 - Proper barriers used to prevent bare hand contact with ready to eat foods",
+    "2500": "2500 - Toxic substances properly identified, stored, used.",
   }
+
+  return (codeMapping[code] || truncatedViolationDescription)
 }
 
 const SeattleEstablishment: IInspectionInfo = {
@@ -125,6 +139,14 @@ const SeattleEstablishment: IInspectionInfo = {
     };
     
     return establishmentDetail;
+  },
+
+  codeToEmoji(code: string): string {
+    switch (code) {
+      case "BLUE": return "🔵";
+      case "RED": return "🔴";
+      default: return code;
+    }
   }
 }
 

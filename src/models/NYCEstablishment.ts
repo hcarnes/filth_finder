@@ -111,6 +111,10 @@ const NYCEstablishment: IInspectionInfo = {
     };
     
     return establishmentDetail;
+  },
+
+  codeToEmoji(code: string): string {
+    return code; // TODO
   }
 }
 

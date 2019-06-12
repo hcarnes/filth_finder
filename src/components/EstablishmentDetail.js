@@ -7,10 +7,10 @@ import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 const EstablishmentDetail = (props) => {
   const id = props.match.params.id;
   const [establishment, setEstablishment] = useState(null);
+  const city = props.match.params.city;
+  const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
   const fetchEstablishment = async (id) => {
-    const city = props.match.params.city;
-    const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
     const fetchedEstablishment = await inspectionInfoImpl.detail(id);
     setEstablishment(fetchedEstablishment);
@@ -114,7 +114,7 @@ const EstablishmentDetail = (props) => {
                               return (
                                 <li key={inspection.date + v.code}>
                                   <p>
-                                    {v.code} -{" "}
+                                    {inspectionInfoImpl.codeToEmoji(v.code)} -{" "}
                                     {cleanDescription(v.description)}
                                   </p>
                                 </li>
