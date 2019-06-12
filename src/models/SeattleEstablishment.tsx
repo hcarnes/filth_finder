@@ -1,6 +1,7 @@
 import axios from "axios";
 import haversine from "haversine-distance";
 import {Establishment, EstablishmentDetail, IInspectionInfo} from "./IInspectionInfo";
+import React from "react";
 
 type LocationIndexEntry = {
   inspection_business_name: string,
@@ -14,13 +15,13 @@ type EstablishmentInspectionResult = {
   violation_type: string,
   description: string,
   inspection_closed_business: boolean,
-  grade: string,
   inspection_date: string,
   latitude: string,
   name:string,
   phone:string,
   zip_code: string,
   inspection_score: string,
+  grade: string,
   violation_points: string,
   city: string,
   program_identifier: string,
@@ -122,7 +123,6 @@ const SeattleEstablishment: IInspectionInfo = {
       return Array.from(inspectionViolations.values()).map(
         groupedViolations => {
           return {
-            grade: groupedViolations[0].grade,
             score: groupedViolations[0].inspection_score,
             action: groupedViolations[0].inspection_closed_business ? "Closed by DOH" : "No action taken",
             date: groupedViolations[0].inspection_date,
@@ -132,6 +132,15 @@ const SeattleEstablishment: IInspectionInfo = {
       );
     };
 
+    const gradeMapping: {[key: string]: string} = {
+      "1": "Excellent",
+      "2": "Good",
+      "3": "Okay",
+      "4": "Needs to Improve",
+    }
+
+    const latestGrade = (gradeMapping[(detailsData[0] && detailsData[0].grade)] || "Needs to Improve")
+
     const establishmentDetail = {
       dba: detailsData[0].inspection_business_name,
       address: [
@@ -140,12 +149,17 @@ const SeattleEstablishment: IInspectionInfo = {
         detailsData[0].zip_code,
         "WA"
       ].join(" "),
+      latestGrade,
       inspections: aggInspections(detailsData).sort(
         (a, b) => Date.parse(a.date) - Date.parse(b.date)
       )
     };
     
     return establishmentDetail;
+  },
+
+  renderGrade(grade, score, action) {
+    return <></>;
   }
 }
 

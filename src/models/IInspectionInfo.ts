@@ -20,10 +20,12 @@ type InspectionResult = {
 export type EstablishmentDetail = {
   dba: string;
   address: string;
+  latestGrade?: string,
   inspections: InspectionResult[]
 }
 
 export interface IInspectionInfo {
   near(lng: number, lat: number, search?: string): Promise<Establishment[]>,
-  detail(id: string): Promise<EstablishmentDetail>
+  detail(id: string): Promise<EstablishmentDetail>,
+  renderGrade(grade: string, score: string, action: string): JSX.Element
 }
