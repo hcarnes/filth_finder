@@ -67,6 +67,13 @@ const expandViolationDescription = (truncatedViolationDescription: string): stri
 
   return (codeMapping[code] || truncatedViolationDescription)
 }
+const codeToEmoji = (code: string): string => {
+  switch (code) {
+    case "BLUE": return "🔵";
+    case "RED": return "🔴";
+    default: return code;
+  }
+}
 
 const SeattleEstablishment: IInspectionInfo = {
   async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
@@ -96,7 +103,7 @@ const SeattleEstablishment: IInspectionInfo = {
       return violations.flatMap(violation => {
         if (violation.violation_type && violation.violation_description) {
           return [{
-            code: violation.violation_type,
+            code: codeToEmoji(violation.violation_type),
             description: expandViolationDescription(violation.violation_description),
           }];
         } else {
@@ -139,14 +146,6 @@ const SeattleEstablishment: IInspectionInfo = {
     };
     
     return establishmentDetail;
-  },
-
-  codeToEmoji(code: string): string {
-    switch (code) {
-      case "BLUE": return "🔵";
-      case "RED": return "🔴";
-      default: return code;
-    }
   }
 }
 

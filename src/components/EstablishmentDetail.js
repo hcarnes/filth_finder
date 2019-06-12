@@ -114,7 +114,7 @@ const EstablishmentDetail = (props) => {
                               return (
                                 <li key={inspection.date + v.code}>
                                   <p>
-                                    {inspectionInfoImpl.codeToEmoji(v.code)} -{" "}
+                                    {v.code} -{" "}
                                     {cleanDescription(v.description)}
                                   </p>
                                 </li>
