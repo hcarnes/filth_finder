@@ -1,6 +1,7 @@
 import axios from "axios";
 import haversine from "haversine-distance";
 import {Establishment, EstablishmentDetail, IInspectionInfo} from "./IInspectionInfo";
+import React from "react";
 
 type LocationIndexEntry = {
   dba: string,
@@ -38,7 +39,6 @@ const fetchDetails = async (camis: string) => {
 };
 
 type NYCEstablishment = Establishment
-
 
 const NYCEstablishment: IInspectionInfo = {
   async near(lng: number, lat: number, search?: string): Promise<Establishment[]> {
@@ -97,6 +97,13 @@ const NYCEstablishment: IInspectionInfo = {
       );
     };
 
+    const aggedInspections = aggInspections(detailsData).sort(
+      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    )
+
+    const latestGradedInspection = aggedInspections.find((x) => x.grade)
+    const latestGrade = (latestGradedInspection && latestGradedInspection.grade)
+
     const establishmentDetail = {
       dba: detailsData[0].dba,
       address: [
@@ -106,12 +113,29 @@ const NYCEstablishment: IInspectionInfo = {
         "NY",
         detailsData[0].zipcode
       ].join(" "),
-      inspections: aggInspections(detailsData).sort(
-        (a, b) => Date.parse(a.date) - Date.parse(b.date)
-      )
+      latestGrade,
+      inspections: aggedInspections
     };
     
     return establishmentDetail;
+  },
+
+  renderGrade(grade, score, action) {
+    if (action && action.includes("Closed")) {
+      return (
+        <span role="img" aria-label="Establishment closed">
+          - &#x1F922;
+        </span>
+      );
+    } else {
+      if (grade && grade !== "Z") {
+        return <>- {grade}</>
+      } else if (score){
+        return <span role="img" aria-label="Grade pending">- &#x23F3;</span>;
+      } else {
+        return <></>
+      }
+    }
   }
 }
 

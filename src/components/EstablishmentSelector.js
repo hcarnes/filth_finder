@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import NYCEstablishment from "../models/NYCEstablishment";
+import SeattleEstablishment from "../models/SeattleEstablishment";
 import EstablishmentList from "./EstablishmentList";
-import { geolocated } from "react-geolocated";
 import { Heading, Box, TextInput, Meter, Anchor } from "grommet";
 import { Github, Twitter } from 'grommet-icons';
+import { CityLocations } from '../models/Locations'
+import { useDebounce } from 'use-debounce'
+
 
 const LoadingSpinner = () => {
   const timerRef = useRef(10)
@@ -31,17 +34,22 @@ const LoadingSpinner = () => {
 }
 
 const EstablishmentSelector = props => {
-  const [search, setSearch] = useState("");
+  const city = props.match.params.city.toLowerCase();
+  const [searchState, setSearch] = useState("");
+  const [search] = useDebounce(searchState, 500);
   const [establishments, setEstablishments] = useState(null);
   const fetchEstablishments = async (longitude, latitude, search) => {
-    const fetchedEstablishments = await NYCEstablishment.near(longitude, latitude, search);
+    const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment;
+    const fetchedEstablishments = await inspectionInfoImpl.near(longitude, latitude, search);
     setEstablishments(fetchedEstablishments);
   };
   useEffect(() => {
     if (props.coords) {
       fetchEstablishments(props.coords.longitude, props.coords.latitude, search);
+    } else {
+      fetchEstablishments(CityLocations[city].lng, CityLocations[city].lat, search);
     }
-  }, [props.coords, search]);
+  }, [props.coords, search, city]);
 
   useEffect(() => {
     if (window.heap) {
@@ -63,52 +71,43 @@ const EstablishmentSelector = props => {
     }
   }, [props.isGeolocationEnabled, props.coords])
 
-  if (props.isGeolocationEnabled) {
-    if (establishments) {
-      return (
-        <Box align="center">
-          <Box direction="row" justify="center">
-            <Anchor
-              target="_blank"
-              a11yTitle="Get your hands dirty on Github"
-              href="https://github.com/hcarnes/filth_finder"
-              icon={<Github color="brand" size="large" />}
-            />
-            <Anchor
-              target="_blank"
-              a11yTitle="Follow me on Twitter"
-              href="https://twitter.com/ketoaustin"
-              icon={<Twitter color="brand" size="large" />}
-            />
-          </Box>
-          <Heading color="brand">Establishments near you:</Heading>
-          <TextInput
-            value={search}
-            placeholder="Search all establishments"
-            onChange={event => {
-              setSearch(event.target.value);
-            }}
-            data-heap="Establishment Search Box"
+  if (establishments) {
+    return (
+      <Box align="center">
+        <Box direction="row" justify="center">
+          <Anchor
+            target="_blank"
+            a11yTitle="Get your hands dirty on Github"
+            href="https://github.com/hcarnes/filth_finder"
+            icon={<Github color="brand" size="large" />}
           />
-          <EstablishmentList establishments={establishments} />
+          <Anchor
+            target="_blank"
+            a11yTitle="Follow me on Twitter"
+            href="https://twitter.com/ketoaustin"
+            icon={<Twitter color="brand" size="large" />}
+          />
         </Box>
-      );
-    } else {
-      return (
-      <>
-        <h1>Loading establishments near you</h1>
-        <LoadingSpinner />
-      </>
-      );
-    }
+        <Heading color="brand">Establishments near you:</Heading>
+        <TextInput
+          value={searchState}
+          placeholder="Search all establishments"
+          onChange={event => {
+            setSearch(event.target.value);
+          }}
+          data-heap="Establishment Search Box"
+        />
+        <EstablishmentList establishments={establishments} city={city} />
+      </Box>
+    );
   } else {
-    return <h1>Location not available</h1>;
+    return (
+    <>
+      <h1>Loading establishments near you</h1>
+      <LoadingSpinner />
+    </>
+    );
   }
 };
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: true
-  },
-  userDecisionTimeout: 60000
-})(EstablishmentSelector);
+export default EstablishmentSelector;

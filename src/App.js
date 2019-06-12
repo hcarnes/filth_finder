@@ -1,20 +1,42 @@
-import React, { Component } from "react";
+import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import EstablishmentDetail from './components/EstablishmentDetail'
-import EstablishmentSelector from './components/EstablishmentSelector'
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import EstablishmentDetail from "./components/EstablishmentDetail";
+import EstablishmentSelector from "./components/EstablishmentSelector";
+import CityPicker from "./components/CityPicker";
+import { geolocated } from "react-geolocated";
+import haversine from "haversine-distance";
+import { seattleLocation, nycLocation } from './models/Locations'
 
-class App extends Component {
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <Route path="/" exact component={EstablishmentSelector} />
-          <Route path="/:id" component={EstablishmentDetail} />
-        </div>
-      </Router>
-    );
+const App = (props) => {
+
+  const getNearestCity = (props) => {
+    const distanceFromSeattle = haversine({lat: props.coords.latitude, lng: props.coords.longitude}, {lat: seattleLocation.lat, lng: seattleLocation.lng});
+    const distanceFromNYC = haversine({lat: props.coords.latitude, lng: props.coords.longitude}, {lat: nycLocation.lat, lng: nycLocation.lng});
+
+    return distanceFromSeattle < distanceFromNYC ? "/seattle" : "/nyc";
   }
-}
 
-export default App;
+  const geoProps = {
+    coords: props.coords,
+    isGeolocationAvailable: props.isGeolocationAvailable,
+    isGeolocationEnabled: props.isGeolocationEnabled
+  }
+
+  return (
+    <Router>
+      <div className="App">
+        <Route exact path="/" render={() => (props.coords) ? (<Redirect to={getNearestCity(props)}/>) : (<CityPicker {...geoProps} />)} />
+        <Route exact path="/:city" render={(routeProps) => <EstablishmentSelector {...routeProps} {...geoProps} /> } />
+        <Route path="/:city/:id" component={EstablishmentDetail} />
+      </div>
+    </Router>
+  );
+};
+
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: true
+  },
+  userDecisionTimeout: 60000
+})(App);

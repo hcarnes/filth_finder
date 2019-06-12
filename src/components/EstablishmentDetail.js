@@ -1,14 +1,18 @@
 import React, {useState, useEffect} from "react";
 import NYCEstablishment from "../models/NYCEstablishment";
+import SeattleEstablishment from "../models/SeattleEstablishment";
 import styles from "./EstablishmentDetail.module.css";
 import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
 
 const EstablishmentDetail = (props) => {
   const id = props.match.params.id;
   const [establishment, setEstablishment] = useState(null);
+  const city = props.match.params.city;
+  const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
   const fetchEstablishment = async (id) => {
-    const fetchedEstablishment = await NYCEstablishment.detail(id);
+
+    const fetchedEstablishment = await inspectionInfoImpl.detail(id);
     setEstablishment(fetchedEstablishment);
   }
 
@@ -27,24 +31,6 @@ const EstablishmentDetail = (props) => {
       return "black"
   }
 
-  const renderGrade = (grade, score, action) => {
-    if (action && action.includes("Closed")) {
-      return (
-        <span role="img" aria-label="Establishment closed">
-          - &#x1F922;
-        </span>
-      );
-    } else {
-      if (grade && grade !== "Z") {
-        return `- ${grade}`
-      } else if (score){
-        return <span role="img" aria-label="Grade pending">- &#x23F3;</span>;
-      } else {
-        return null
-      }
-    }
-  }
-
   const handleScore = (score) => {
     if (score) {
       return `(${score})`
@@ -58,13 +44,12 @@ const EstablishmentDetail = (props) => {
       <Box pad={{ horizontal: 'xsmall' }}>
         <Heading level={4}>
           <span>{`${new Date(date).toLocaleDateString()}`}</span>
-          <span style={{color: gradeColor(grade)}}> {renderGrade(grade, score, action)} {handleScore(score)}</span>
+          <span style={{color: gradeColor(grade)}}> {inspectionInfoImpl.renderGrade(grade, score, action)} {handleScore(score)}</span>
         </Heading>
       </Box>
     )
   }
 
-  
   const cleanDescription = (description) => {
     const regex = /Â/gi;
 
@@ -81,6 +66,7 @@ const EstablishmentDetail = (props) => {
         <Box align="center">
           <Heading color="brand">Violations at {establishment.dba}</Heading>
           <Text>Establishment ID: {id}</Text>
+          {establishment.latestGrade ? (<Text>Latest Grade: {establishment.latestGrade}</Text>) : (<></>)}
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
             <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
