@@ -27,5 +27,5 @@ export type EstablishmentDetail = {
 export interface IInspectionInfo {
   near(lng: number, lat: number, search?: string): Promise<Establishment[]>,
   detail(id: string): Promise<EstablishmentDetail>,
-  renderGrade(grade: string, score: string, action: string): JSX.Element
+  renderGrade(grade: string | undefined, score: string, action: string): JSX.Element
 }
