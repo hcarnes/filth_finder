@@ -102,7 +102,7 @@ const EstablishmentDetail = (props: Props) => {
           {establishment.latestGrade ? (<Text>Latest Grade: {establishment.latestGrade}</Text>) : (<></>)}
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
-            <Accordion direction="column-reverse">
+            <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
               {establishment.inspections.map(inspection => {
                 return (
                   <AccordionPanel
@@ -124,7 +124,7 @@ const EstablishmentDetail = (props: Props) => {
                       >
                         <p>{inspection.action}</p>
                         <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.length > 0 ? (
+                          {inspection.violations ? (
                             inspection.violations.map(v => {
                               return (
                                 <li key={inspection.date + v.code}>
