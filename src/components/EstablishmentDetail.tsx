@@ -71,7 +71,7 @@ const EstablishmentDetail = (props: RouteComponentProps<{id: string, city: strin
           {establishment.latestGrade ? (<Text>Latest Grade: {establishment.latestGrade}</Text>) : (<></>)}
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
-            <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
+            <Accordion data-heap="Establishment Violation Accordion">
               {establishment.inspections.map(inspection => {
                 return (
                   <AccordionPanel
