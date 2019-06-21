@@ -3,39 +3,12 @@ import NYCEstablishment from "../models/NYCEstablishment";
 import SeattleEstablishment from "../models/SeattleEstablishment";
 import styles from "./EstablishmentDetail.module.css";
 import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
+import { EstablishmentDetail as EstablishmentDetailData } from "../models/IInspectionInfo"
+import { RouteComponentProps } from "react-router-dom";
 
-type Props = {match: {params: {id: string, city: string}}}
-
-export type Establishment = {
-  id: string,
-  dba: string,
-  distance: number,
-}
-
-type Violation = {
-  code: string,
-  description: string
-}
-
-type InspectionResult = {
-  grade?: string;
-  score: string;
-  action: string;
-  date: string;
-  violations?: Violation[] | undefined
-}
-
-type EstablishmentDetailObject = {
-  dba: string;
-  address: string;
-  latestGrade?: string,
-  inspections: InspectionResult[]
-}
-
-
-const EstablishmentDetail = (props: Props) => {
+const EstablishmentDetail = (props: RouteComponentProps<{id: string, city: string}>) => {
   const id = props.match.params.id;
-  const [establishment, setEstablishment] = useState<EstablishmentDetailObject | null>(null);
+  const [establishment, setEstablishment] = useState<EstablishmentDetailData | null>(null);
   const city = props.match.params.city;
   const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
@@ -49,7 +22,7 @@ const EstablishmentDetail = (props: Props) => {
     fetchEstablishment(id)
   }, [id]);
 
-  const gradeColor = (grade: string | undefined) => {
+  const gradeColor = (grade?: string) => {
     if (grade === "A") {
       return "mediumseagreen"
     } else if (grade === "B") {
@@ -68,7 +41,7 @@ const EstablishmentDetail = (props: Props) => {
     }
   }
 
-  const AccordionLabel = ({date, grade, score, action}: InspectionResult) => {
+  const AccordionLabel = ({date, grade, score, action}: {date: string, grade?: string, score: string, action: string}) => {
     return (
       <Box pad={{ horizontal: 'small' }}>
         <Heading level={"4"}>
@@ -87,10 +60,6 @@ const EstablishmentDetail = (props: Props) => {
     } else {
       return "";
     }
-  }
-
-  const noViolations = (inspection: InspectionResult) => {
-    !inspection.violations
   }
 
   if (establishment) {

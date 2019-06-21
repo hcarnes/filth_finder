@@ -4,12 +4,12 @@ export type Establishment = {
   distance: number,
 }
 
-type Violation = {
+export type Violation = {
   code: string,
   description: string
 }
 
-type InspectionResult = {
+export type InspectionResult = {
   grade?: string;
   score: string;
   action: string;
