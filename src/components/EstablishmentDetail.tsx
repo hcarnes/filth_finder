@@ -3,14 +3,16 @@ import NYCEstablishment from "../models/NYCEstablishment";
 import SeattleEstablishment from "../models/SeattleEstablishment";
 import styles from "./EstablishmentDetail.module.css";
 import { Heading, Text, Accordion, AccordionPanel, Box } from "grommet";
+import { EstablishmentDetail as EstablishmentDetailData } from "../models/IInspectionInfo"
+import { RouteComponentProps } from "react-router-dom";
 
-const EstablishmentDetail = (props) => {
+const EstablishmentDetail = (props: RouteComponentProps<{id: string, city: string}>) => {
   const id = props.match.params.id;
-  const [establishment, setEstablishment] = useState(null);
+  const [establishment, setEstablishment] = useState<EstablishmentDetailData | null>(null);
   const city = props.match.params.city;
   const inspectionInfoImpl = (city === "nyc") ? NYCEstablishment : SeattleEstablishment
 
-  const fetchEstablishment = async (id) => {
+  const fetchEstablishment = async (id: string) => {
 
     const fetchedEstablishment = await inspectionInfoImpl.detail(id);
     setEstablishment(fetchedEstablishment);
@@ -20,7 +22,7 @@ const EstablishmentDetail = (props) => {
     fetchEstablishment(id)
   }, [id]);
 
-  const gradeColor = (grade) => {
+  const gradeColor = (grade?: string) => {
     if (grade === "A") {
       return "mediumseagreen"
     } else if (grade === "B") {
@@ -31,7 +33,7 @@ const EstablishmentDetail = (props) => {
       return "black"
   }
 
-  const handleScore = (score) => {
+  const handleScore = (score: string) => {
     if (score) {
       return `(${score})`
     } else {
@@ -39,10 +41,10 @@ const EstablishmentDetail = (props) => {
     }
   }
 
-  const AccordionLabel = ({date, grade, score, action}) => {
+  const AccordionLabel = ({date, grade, score, action}: {date: string, grade?: string, score: string, action: string}) => {
     return (
-      <Box pad={{ horizontal: 'xsmall' }}>
-        <Heading level={4}>
+      <Box pad={{ horizontal: 'small' }}>
+        <Heading level={"4"}>
           <span>{`${new Date(date).toLocaleDateString()}`}</span>
           <span style={{color: gradeColor(grade)}}> {inspectionInfoImpl.renderGrade(grade, score, action)} {handleScore(score)}</span>
         </Heading>
@@ -50,7 +52,7 @@ const EstablishmentDetail = (props) => {
     )
   }
 
-  const cleanDescription = (description) => {
+  const cleanDescription = (description: string) => {
     const regex = /Â/gi;
 
     if (description) {
@@ -69,7 +71,7 @@ const EstablishmentDetail = (props) => {
           {establishment.latestGrade ? (<Text>Latest Grade: {establishment.latestGrade}</Text>) : (<></>)}
           <Text>{establishment.address}</Text>
           <ul className={styles.EstablishmentDetail}>
-            <Accordion direction="column-reverse" data-heap="Establishment Violation Accordion">
+            <Accordion data-heap="Establishment Violation Accordion">
               {establishment.inspections.map(inspection => {
                 return (
                   <AccordionPanel
@@ -91,7 +93,7 @@ const EstablishmentDetail = (props) => {
                       >
                         <p>{inspection.action}</p>
                         <ul className={styles.EstablishmentDetail}>
-                          {inspection.violations.length > 0 ? (
+                          {inspection.violations ? (
                             inspection.violations.map(v => {
                               return (
                                 <li key={inspection.date + v.code}>
