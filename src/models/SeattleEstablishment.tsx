@@ -151,7 +151,7 @@ const SeattleEstablishment: IInspectionInfo = {
       ].join(" "),
       latestGrade,
       inspections: aggInspections(detailsData).sort(
-        (a, b) => Date.parse(a.date) - Date.parse(b.date)
+        (a, b) => Date.parse(b.date) - Date.parse(a.date)
       )
     };
     
